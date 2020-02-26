@@ -47,5 +47,4 @@ function search_btn_press() {
     var location = document.getElementById("location").value;
     console.log(description, location);
 
-
 }
