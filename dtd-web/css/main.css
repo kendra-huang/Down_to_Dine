@@ -6,6 +6,9 @@
 /*--
     Common Css
 --*/
+html {
+  scroll-behavior: smooth;
+}
 body {
   font-family: myfont;
   font-size: 14px;
@@ -137,29 +140,22 @@ a:active {
   opacity: 0.3;
 }
 .btn-container {
-  width: 100%;
+  text-align: center;
 }
-
 .btn-group {
-  display: inline-flex;
-  width:80%;
-  vertical-align: middle;
-  margin-left: auto;
-  margin-right: auto;
+  display: block;
+  width: auto;
 }
 .btn-group1 {
   padding: 24px;
   width: 40%;
-  border: none;
 }
 .btn-group2 {
   padding: 24px;
   width: 30%;
-  border: none;
 }
 .btn-form {
-  padding: 24px;
-  height: 100%;
+  padding: 26px;
   background: #ff3a6d;
   color: white;
   border: none;
@@ -173,7 +169,6 @@ nav {
   width: 100%;
 }
 nav .block {
-  margin-top: -85px;
   background: #fff;
   padding: 25px 40px;
   background: rgba(255, 255, 255, 0.89);

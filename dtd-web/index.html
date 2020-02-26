@@ -37,15 +37,6 @@
 	============================== -->
     <section id="hero-area">
         <img class="img-responsive hero-img" src="images/header.jpg" alt="">
-        <div class="btn-container">
-            <div class="btn-group" role="group" aria-label="Basic example">
-                <input type="text" placeholder="What are your looking for?" class="btn-group1">
-                <input type="text" placeholder="New york" class="btn-group2">
-                <button type="submit" class="btn-form"><span class="icon-magnifier search-icon"></span>SEARCH<i class="pe-7s-angle-right"></i></button>
-            </div>    
-        </div>
-
-      
     </section>
 	<!--
     Header start 
@@ -55,6 +46,14 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="block">
+                        <!-- search bar div inside navbar -->
+                        <form class="btn-container">
+                            <div class="btn-group">
+                                <input type="text" id="description" placeholder="What are your looking for?" class="btn-group1">
+                                <input type="text" id="location" placeholder="Around where?" class="btn-group2">
+                                <button class="btn-form" type="search" onclick="search_btn_press()"><i class="fa fa-search"></i> SEARCH</button>
+                            </div>    
+                        </form>
                         <nav class="navbar navbar-default">
                           <div class="container-fluid">
                             <!-- Brand and toggle get grouped for better mobile display -->
@@ -65,10 +64,7 @@
                                 <span class="icon-bar"></span>
                                 <span class="icon-bar"></span>
                               </button>
-                                  <a class="navbar-brand" href="#">
-                                    <img src="images/logo.png" alt="Logo">
-                                  </a>
-
+                                <a class="navbar-brand" href="#"><img src="images/logo.png" alt="Logo"></a>
                             </div>
 
                             <!-- Collect the nav links, forms, and other content for toggling -->
