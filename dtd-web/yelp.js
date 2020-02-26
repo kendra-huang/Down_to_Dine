@@ -21,25 +21,3 @@ function getYelpData() {
 };
 
 test();
-
-
-yelpRequest() { 
-    var searchRequest = {
-      term: 'Chick-fil-a',
-    }
-    var yelp_corsanywhere = "https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/";
-    var searchType = 'businesses/search?'
-    var queryParamString = querystring.stringify(searchRequest);
-    const header = {
-      method: 'GET',
-      headers: new Headers({
-        "Authorization": "Bearer "+apiKey
-      })
-    }
-    fetch(yelp_corsanywhere+searchType+queryParamString, header
-    ).then(response => {
-      return response.json();
-    }).then(json => {
-      console.log(json);
-    });
-  }
