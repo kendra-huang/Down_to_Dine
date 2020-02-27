@@ -1,0 +1,6 @@
+<li><code>overflow-x:auto</code> — on most browsers, equivalent to <code>scroll</code>
+    <div id="div4">
+      ABCDEFGHIJKLMOPQRSTUVWXYZABCDEFGHIJKLMOPQRSTUVWXYZ
+    </div>
+  </li>
+</ul>

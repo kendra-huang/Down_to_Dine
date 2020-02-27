@@ -49,3 +49,8 @@ function search_btn_press() {
 
 
 }
+
+// For the tables - enabling panel scroll
+$('.pane-hScroll').scroll(function() {
+    $('.pane-vScroll').width($('.pane-hScroll').width() + $('.pane-hScroll').scrollLeft());
+  });

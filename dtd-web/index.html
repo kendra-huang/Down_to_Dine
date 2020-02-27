@@ -46,15 +46,16 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="block">
-                        <!-- search bar div inside navbar -->
-                        <form class="btn-container">
-                            <div class="btn-group">
-                                <input type="text" id="description" placeholder="What are your looking for?" class="btn-group1">
-                                <input type="text" id="location" placeholder="Around where?" class="btn-group2">
-                                <button class="btn-form" type="search" onclick="search_btn_press()"><i class="fa fa-search"></i> SEARCH</button>
-                            </div>    
-                        </form>
                         <nav class="navbar navbar-default">
+                            <div class="btn-container">
+                                <div class="btn-group" role="group" aria-label="Basic example">
+                                    <input type="text" placeholder="What are your looking for?" class="btn-group1">
+                                    <input type="text" placeholder="New york" class="btn-group2">
+                                    <button type="submit" class="btn-form"><span class="icon-magnifier search-icon"></span>SEARCH<i class="pe-7s-angle-right"></i></button>
+                                </div>    
+                            </div>
+                    
+                          
                           <div class="container-fluid">
                             <!-- Brand and toggle get grouped for better mobile display -->
                             <div class="navbar-header">
@@ -64,15 +65,18 @@
                                 <span class="icon-bar"></span>
                                 <span class="icon-bar"></span>
                               </button>
-                                <a class="navbar-brand" href="#"><img src="images/logo.png" alt="Logo"></a>
+                                  <a class="navbar-brand" href="#">
+                                    <img src="images/logo.png" alt="Logo">
+                                  </a>
+
                             </div>
 
                             <!-- Collect the nav links, forms, and other content for toggling -->
                             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                               <ul class="nav navbar-nav navbar-right" id="top-nav">
                                 <li><a href="#hero-area">Home</a></li>
+                                <li><a href="#blog">Trending</a></li>
                                 <li><a href="#about-us">about us</a></li>
-                                <li><a href="#blog">Blog</a></li>
                                 <li><a href="#price">menu</a></li>
                                 <li><a href="#subscribe">news</a></li>
                                 <li><a href="#contact-us">contacts</a></li>
@@ -129,31 +133,14 @@
         </div><!-- .container close -->
     </section><!-- slider close -->
     <!--
-    about-us start
-    ============================== -->
-    <section id="about-us">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="block">
-                        <img class="wow fadeInUp" data-wow-duration="300ms" data-wow-delay="400ms" src="images/cooker-img.png" alt="cooker-img">
-                        <h1 class="heading wow fadeInUp" data-wow-duration="400ms" data-wow-delay="500ms" >Your <span>Restaurant’s</span> </br> Website Look <span>Good</span>
-                        </h1>
-                        <p class="wow fadeInUp" data-wow-duration="300ms" data-wow-delay="600ms">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim </br> ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in </br>voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat</p>
-                    </div>
-                </div><!-- .col-md-12 close -->
-            </div><!-- .row close -->
-        </div><!-- .containe close -->
-    </section><!-- #call-to-action close -->
-    <!--
-    blog start
+    trending start
     ============================ -->
     <section id="blog">
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
                     <div class="block">
-                        <h1 class="heading">Latest <span>From</span> the <span>Blog</span></h1>
+                        <h1 class="heading"><span>Latest</span> from <span>Trending</span></h1>
                         <ul>
                             <li class="wow fadeInLeft" data-wow-duration="300ms" data-wow-delay="300ms">
                                 <div class="blog-img">
@@ -216,6 +203,74 @@
             </div><!-- .row close -->
         </div><!-- .containe close -->
     </section><!-- #blog close -->
+    <!--
+    about-us start
+    ============================== -->
+    
+    <section id="about-us">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="block">
+                        <img class="wow fadeInUp" data-wow-duration="300ms" data-wow-delay="400ms" src="images/cooker-img.png" alt="cooker-img">
+                        <h1 class="heading wow fadeInUp" data-wow-duration="400ms" data-wow-delay="500ms" >Your <span>Restaurant’s</span> </br> Website Has To Look <span>Good</span>
+                        </h1>
+                        <p class="wow fadeInUp" data-wow-duration="300ms" data-wow-delay="600ms">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim </br> ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in </br>voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat</p>
+                        <p>Both tables use 'table-layout: fixed' to address column sizes.
+                            <h3>Example 1: Two-Table Structure</h3>
+                            <div class="pane pane--table1">
+                              <div class="pane-hScroll">
+                            
+                                <table>
+                                  <thead>
+                                    <tr><th>foo</th><th>foo</th><th>foo</th><th>foo</th></tr>
+                                  </thead>
+                                </table>
+                            
+                                <div class="pane-vScroll">
+                                  <table>
+                                    <tbody>
+                                      <tr><td>1</td><td>foo</td><td>foo</td><td>foo</td></tr>
+                                      <tr><td>2</td><td>foo</td><td>foo</td><td>foo</td></tr>
+                                      <tr><td>3</td><td>foo</td><td>foo</td><td>foo</td></tr>
+                                      <tr><td>4</td><td>foo foo foo foo foo foo foo foo foo foo foo</td><td>foo</td><td>foo</td></tr>
+                                      <tr><td>5</td><td>foo</td><td>foo</td><td>foo</td></tr>
+                                      <tr><td>6</td><td>foo</td><td>foo</td><td>foo</td></tr>
+                                      <tr><td>7</td><td>foo</td><td>foo</td><td>foo</td></tr>
+                                      <tr><td>8</td><td>foo</td><td>foo</td><td>foo</td></tr>
+                                      <tr><td>9</td><td>foo</td><td>foo</td><td>foo</td></tr>
+                                      <tr><td>10</td><td>foo</td><td>foo</td><td>foo</td></tr>
+                                      <tr><td>11</td><td>foo</td><td>foo</td><td>foo</td></tr>
+                                      <tr><td>12</td><td>foo</td><td>foo</td><td>foo</td></tr>
+                                      <tr><td>13</td><td>foo</td><td>foo</td><td>foo</td></tr>
+                                      <tr><td>14</td><td>foo</td><td>foo</td><td>foo</td></tr>
+                                      <tr><td>15</td><td>foo</td><td>foo</td><td>foo</td></tr>
+                                      <tr><td>16</td><td>foo</td><td>foo</td><td>foo</td></tr>
+                                      <tr><td>17</td><td>foo</td><td>foo</td><td>foo</td></tr>
+                                      <tr><td>18</td><td>foo</td><td>foo</td><td>foo</td></tr>
+                                      <tr><td>19</td><td>foo</td><td>foo</td><td>foo</td></tr>
+                                      <tr><td>20</td><td>foo</td><td>foo</td><td>foo</td></tr>
+                                      <tr><td>21</td><td>foo</td><td>foo</td><td>foo</td></tr>
+                                      <tr><td>22</td><td>foo</td><td>foo</td><td>foo</td></tr>
+                                      <tr><td>23</td><td>foo</td><td>foo</td><td>foo</td></tr>
+                                      <tr><td>24</td><td>foo</td><td>foo</td><td>foo</td></tr>
+                                      <tr><td>25</td><td>foo</td><td>foo</td><td>foo</td></tr>
+                                      <tr><td>26</td><td>foo</td><td>foo</td><td>foo</td></tr>
+                                      <tr><td>27</td><td>foo</td><td>foo</td><td>foo</td></tr>
+                                      <tr><td>28</td><td>foo</td><td>foo</td><td>foo</td></tr>
+                                      <tr><td>28</td><td>foo</td><td>foo</td><td>foo</td></tr>
+                                      <tr><td>29</td><td>foo</td><td>foo</td><td>foo</td></tr>
+                                      <tr><td>30</td><td>foo</td><td>foo</td><td>foo</td></tr>
+                                    </tbody>
+                                  </table>
+                                </div>
+                              </div>
+                            </div>
+                    </div>
+                </div><!-- .col-md-12 close -->
+            </div><!-- .row close -->
+        </div><!-- .containe close -->
+    </section><!-- #call-to-action close -->
     <!--
     price start
     ============================ -->
@@ -452,16 +507,16 @@
     <!--
     footer-bottom  start
     ============================= -->
-    <!--<footer id="footer-bottom">
+    <footer id="footer-bottom">
         <div class="container">
             <div class="row">
                 <div class="col-md-12 col-sm-12">
-                <div class="block">
+                    <div class="block">
                         <p>Copyright &copy; 2014 - All Rights Reserved.Design and Developed By <a href="http://www.themefisher.com">Themefisher</a></p>
                     </div>
                 </div>
             </div>
         </div>
-    </footer> -->
+    </footer>
 	</body>
 </html>
