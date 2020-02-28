@@ -20,7 +20,13 @@
 		<link rel="stylesheet" href="css/main.css"> 
         <!-- Responsive Stylesheet -->
 		<link rel="stylesheet" href="css/responsive.css">
-		<!-- Js -->
+        <!-- Js -->
+        <link rel="stylesheet" href="css/reset.css"> <!-- CSS reset -->
+        <link rel="stylesheet" href="css/style.css"> <!-- Resource style -->
+        <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600' rel='stylesheet' type='text/css'>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <script src="js/modernizr.js"></script> <!-- Modernizr -->
     <script src="js/vendor/modernizr-2.6.2.min.js"></script>
     <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script> -->
     <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.2.min.js"><\/script>')</script>
@@ -46,8 +52,10 @@
                     <option value="Restaurant">
                     <option value="Japanese">
                 </datalist>
-                <input type="text" autocomplete="off" list='location-suggestion' id="location" placeholder="Around where?" class="btn-group2">
-                <datalist id="location-suggestion"><option value="Your Location"></datalist>
+                <input type="text" oninput="locationCheck()" autocomplete="off" list='location-suggestion' id="location" placeholder="Around where?" class="btn-group2">
+                <datalist id="location-suggestion">
+                    <option value="Your Location">
+                </datalist>
                 <button class="btn-form" onclick="search_btn_press()"><i class="fa fa-search"></i> SEARCH</button>
             </div>    
         </form> <!-- search bar end -->
@@ -139,7 +147,122 @@
         </div><!-- .container close -->
     </section><!-- slider close -->
 
-    <!--
+     <!--
+    listing start
+    ============================ -->
+
+    <section id="blog">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="block">
+                        <h1 class="heading"><span>Latest</span> from <span>Trending</span></h1>
+                        <ul>
+                            <li class="wow fadeInLeft" data-wow-duration="300ms" data-wow-delay="300ms">
+                                <div class="blog-img">
+                                    <img src="images/blog/blog-img-1.jpg" alt="blog-img">
+                                </div>
+                                <div class="content-right">
+                                    <h3>Homestyle Chicken Pot Pie</h3>
+                                    <p>Prepared in true New England fash-ion. Tender all-white meat chicken simmered...</p>
+                                </div>
+                            </li>
+                            <li class="wow fadeInLeft" data-wow-duration="300ms" data-wow-delay="400ms">
+                                <div class="blog-img">
+                                    <img src="images/blog/blog-img-2.jpg" alt="blog-img">
+                                </div>
+                                <div class="content-right">
+                                    <h3>Homestyle Chicken Pot Pie</h3>
+                                    <p>Prepared in true New England fash-ion. Tender all-white meat chicken simmered...</p>
+                                </div>
+                            </li>
+                            <li class="wow fadeInLeft" data-wow-duration="300ms" data-wow-delay="500ms">
+                                <div class="content-left">
+                                    <h3>Homestyle Chicken Pot Pie</h3>
+                                    <p>Prepared in true New England fash-ion. Tender all-white meat chicken simmered...</p>
+                                </div>
+                                <div class="blog-img-2">
+                                    <img src="images/blog/blog-img-3.jpg" alt="blog-img">
+                                </div>
+                            </li>
+                            <li class="wow fadeInLeft" data-wow-duration="300ms" data-wow-delay="600ms">
+                                <div class="content-left">
+                                    <h3>Homestyle Chicken Pot Pie</h3>
+                                    <p>Prepared in true New England fash-ion. Tender all-white meat chicken simmered...</p>
+                                </div>
+                                <div class="blog-img-2">
+                                    <img src="images/blog/blog-img-4.jpg" alt="blog-img">
+                                </div>
+                            </li>
+                            <li class="wow fadeInLeft" data-wow-duration="300ms" data-wow-delay="700ms">
+                                <div class="blog-img">
+                                    <img src="images/blog/blog-img-5.jpg" alt="blog-img">
+                                </div>
+                                <div class="content-right">
+                                    <h3>Homestyle Chicken Pot Pie</h3>
+                                    <p>Prepared in true New England fash-ion. Tender all-white meat chicken simmered...</p>
+                                </div>
+                            </li>
+                            <li class="wow fadeInUp" data-wow-duration="300ms" data-wow-delay="800ms">
+                                <div class="blog-img">
+                                    <img src="images/blog/blog-img-6.jpg" alt="blog-img">
+                                </div>
+                                <div class="content-right">
+                                    <h3>Homestyle Chicken Pot Pie</h3>
+                                    <p>Prepared in true New England fash-ion. Tender all-white meat chicken simmered...</p>
+                                </div>
+                            </li>
+                        </ul>
+                        <a class="btn btn-default btn-more-info wow bounceIn" data-wow-duration="500ms" data-wow-delay="1200ms" href="#" role="button">More Info</a>
+                    </div>
+                </div><!-- .col-md-12 close -->
+            </div><!-- .row close -->
+        </div><!-- .containe close -->
+    </section><!-- #listing close -->
+
+
+    <section id="slider">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="block wow fadeInUp" data-wow-duration="500ms" data-wow-delay="300ms">
+                        <div class="title">
+                            <h3>Featured <span>Works</span></h3>
+                        </div>
+                        <div id="owl-example" class="owl-carousel">
+                            <div>
+                                <img class="img-responsive" src="images/slider/slider-img-1.jpg" alt="">
+                            </div>
+                            <div>
+                                <img class="img-responsive" src="images/slider/slider-img-2.jpg" alt="">
+                            </div>
+                            <div>
+                                <img class="img-responsive" src="images/slider/slider-img-3.jpg" alt="">
+                            </div>
+                            <div>
+                                <img class="img-responsive" src="images/slider/slider-img-4.jpg" alt="">
+                            </div>
+                            <div>
+                                <img class="img-responsive" src="images/slider/slider-img-1.jpg" alt="">
+                            </div>
+                            <div>
+                                <img class="img-responsive" src="images/slider/slider-img-2.jpg" alt="">
+                            </div>
+                            <div>
+                                <img class="img-responsive" src="images/slider/slider-img-3.jpg" alt="">
+                            </div>
+                            <div>
+                                <img class="img-responsive" src="images/slider/slider-img-4.jpg" alt="">
+                            </div>
+                        
+                        </div>
+                    </div>
+                </div><!-- .col-md-12 close -->
+            </div><!-- .row close -->
+        </div><!-- .container close -->
+    </section>
+
+     <!--
     trending start
     ============================ -->
     <section id="blog">
@@ -211,137 +334,6 @@
         </div><!-- .containe close -->
     </section><!-- #trending close -->
 
-     <!--
-    listing start
-    ============================ -->
-
-    <section id="slider">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="block wow fadeInUp" data-wow-duration="500ms" data-wow-delay="300ms">
-                        <div class="title">
-                            <h3>Featured <span>Works</span></h3>
-                        </div>
-                        <div id="owl-example" class="owl-carousel">
-                            <div>
-                                <img class="img-responsive" src="images/slider/slider-img-1.jpg" alt="">
-                            </div>
-                            <div>
-                                <img class="img-responsive" src="images/slider/slider-img-2.jpg" alt="">
-                            </div>
-                            <div>
-                                <img class="img-responsive" src="images/slider/slider-img-3.jpg" alt="">
-                            </div>
-                            <div>
-                                <img class="img-responsive" src="images/slider/slider-img-4.jpg" alt="">
-                            </div>
-                            <div>
-                                <img class="img-responsive" src="images/slider/slider-img-1.jpg" alt="">
-                            </div>
-                            <div>
-                                <img class="img-responsive" src="images/slider/slider-img-2.jpg" alt="">
-                            </div>
-                            <div>
-                                <img class="img-responsive" src="images/slider/slider-img-3.jpg" alt="">
-                            </div>
-                            <div>
-                                <img class="img-responsive" src="images/slider/slider-img-4.jpg" alt="">
-                            </div>
-                        
-                        </div>
-                    </div>
-                </div><!-- .col-md-12 close -->
-            </div><!-- .row close -->
-        </div><!-- .container close -->
-    </section>
-
-    <section id="blog">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="block">
-                        <h1 class="heading"><span>Latest</span> from <span>Trending</span></h1>
-                        <ul>
-                            <li class="wow fadeInLeft" data-wow-duration="300ms" data-wow-delay="300ms">
-                                <div class="blog-img">
-                                    <img src="images/blog/blog-img-1.jpg" alt="blog-img">
-                                </div>
-                                <div class="content-right">
-                                    <h3>Homestyle Chicken Pot Pie</h3>
-                                    <p>Prepared in true New England fash-ion. Tender all-white meat chicken simmered...</p>
-                                </div>
-                            </li>
-                            <li class="wow fadeInLeft" data-wow-duration="300ms" data-wow-delay="400ms">
-                                <div class="blog-img">
-                                    <img src="images/blog/blog-img-2.jpg" alt="blog-img">
-                                </div>
-                                <div class="content-right">
-                                    <h3>Homestyle Chicken Pot Pie</h3>
-                                    <p>Prepared in true New England fash-ion. Tender all-white meat chicken simmered...</p>
-                                </div>
-                            </li>
-                            <li class="wow fadeInLeft" data-wow-duration="300ms" data-wow-delay="500ms">
-                                <div class="content-left">
-                                    <h3>Homestyle Chicken Pot Pie</h3>
-                                    <p>Prepared in true New England fash-ion. Tender all-white meat chicken simmered...</p>
-                                </div>
-                                <div class="blog-img-2">
-                                    <img src="images/blog/blog-img-3.jpg" alt="blog-img">
-                                </div>
-                            </li>
-                            <li class="wow fadeInLeft" data-wow-duration="300ms" data-wow-delay="600ms">
-                                <div class="content-left">
-                                    <h3>Homestyle Chicken Pot Pie</h3>
-                                    <p>Prepared in true New England fash-ion. Tender all-white meat chicken simmered...</p>
-                                </div>
-                                <div class="blog-img-2">
-                                    <img src="images/blog/blog-img-4.jpg" alt="blog-img">
-                                </div>
-                            </li>
-                            <li class="wow fadeInLeft" data-wow-duration="300ms" data-wow-delay="700ms">
-                                <div class="blog-img">
-                                    <img src="images/blog/blog-img-5.jpg" alt="blog-img">
-                                </div>
-                                <div class="content-right">
-                                    <h3>Homestyle Chicken Pot Pie</h3>
-                                    <p>Prepared in true New England fash-ion. Tender all-white meat chicken simmered...</p>
-                                </div>
-                            </li>
-                            <li class="wow fadeInUp" data-wow-duration="300ms" data-wow-delay="800ms">
-                                <div class="blog-img">
-                                    <img src="images/blog/blog-img-6.jpg" alt="blog-img">
-                                </div>
-                                <div class="content-right">
-                                    <h3>Homestyle Chicken Pot Pie</h3>
-                                    <p>Prepared in true New England fash-ion. Tender all-white meat chicken simmered...</p>
-                                </div>
-                            </li>
-                        </ul>
-                        <a class="btn btn-default btn-more-info wow bounceIn" data-wow-duration="500ms" data-wow-delay="1200ms" href="#" role="button">More Info</a>
-                    </div>
-                </div><!-- .col-md-12 close -->
-            </div><!-- .row close -->
-        </div><!-- .containe close -->
-    </section><!-- #listing close -->
-
-    <!--
-    about-us start
-    ============================== -->
-    <section id="about-us">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="block">
-                        <img class="wow fadeInUp" data-wow-duration="300ms" data-wow-delay="400ms" src="images/cooker-img.png" alt="cooker-img">
-                        <h1 class="heading wow fadeInUp" data-wow-duration="400ms" data-wow-delay="500ms" >Your <span>Restaurant’s</span> </br> Website Has To Look <span>Good</span>
-                        </h1>
-                        <p class="wow fadeInUp" data-wow-duration="300ms" data-wow-delay="600ms">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim </br> ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in </br>voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat</p>
-                    </div>
-                </div><!-- .col-md-12 close -->
-            </div><!-- .row close -->
-        </div><!-- .containe close -->
-    </section><!-- #call-to-action close -->
     <!--
     about-us start
     ============================== -->
@@ -352,250 +344,225 @@
                 <div class="col-md-12">
                     <div class="block">
                         <img class="wow fadeInUp" data-wow-duration="300ms" data-wow-delay="400ms" src="images/cooker-img.png" alt="cooker-img">
-                        <h1 class="heading wow fadeInUp" data-wow-duration="400ms" data-wow-delay="500ms" >Your <span>Restaurant’s</span> </br> Website Has To Look <span>Good</span>
-                        </h1>
-                        <html lang="en" class="no-js">
-                        <p class="wow fadeInUp" data-wow-duration="300ms" data-wow-delay="600ms">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim </br> ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in </br>voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat</p>
-        
                         <!--Below code from this section (code modified to fit personal use)
-            Project: https://github.com/CodyHouse/products-comparison-table 
-            ©2014 - 2020 CodyHouse. A project by @romano_cla and @guerriero_se
-            License (MIT License) https://github.com/CodyHouse/products-comparison-table-->     
-
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1">
-            <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600' rel='stylesheet' type='text/css'>
-
-            <link rel="stylesheet" href="css/reset.css"> <!-- CSS reset -->
-            <link rel="stylesheet" href="css/style.css"> <!-- Resource style -->
-            <script src="js/modernizr.js"></script> <!-- Modernizr -->
-        
-        <title> Products Comparison Table | CodyHouse</title>
-        </head>
-        <body>
-            <section class="cd-intro">
-                <h1>Products Comparison Table</h1>
-            </section> <!-- .cd-intro -->
-
-            <section class="cd-products-comparison-table">
-                <header>
-                    <h2>Compare Restaurants</h2>
-
-                    <div class="actions">
-                        <a href="#0" class="reset">Reset</a>
-                        <a href="#0" class="filter">Filter</a>
-                    </div>
-                </header>
-
-                <div class="cd-products-table">
-                    <div class="features">
-                        <div class="top-info">Restaurants</div>
-                        <ul class="cd-features-list">
-                            <li>Price</li>
-                            <li>Customer Rating</li>
-                            <li>Cuisine</li>
-                            <li>Location</li> <!-- possible implementation of maps -->
-                            <li>Menu</li>
-                            <!-- <li>Refresh Rate</li>
-                            <li>Model Year</li>
-                            <li>Tuner Technology</li>
-                            <li>Ethernet Input</li>
-                            <li>USB Input</li>
-                            <li>Scart Input</li> -->
-                        </ul>
-                    </div> <!-- .features -->
-                    
-                    <div class="cd-products-wrapper">
-                        <ul class="cd-products-columns">
-                            <li class="product">
-                                <div class="top-info">
-                                    <div class="check"></div>
-                                    <img src="img/product.png" alt="product image">
-                                    <h3>Sumsung Series 6 J6300</h3>
-                                </div> <!-- .top-info -->
-
-                                <ul class="cd-features-list">
-                                    <li>$600</li>
-                                    <li class="rate"><span>5/5</span></li>
-                                    <li>1080p</li>
-                                    <li>LED</li>
-                                    <li>47.6 inches</li>
-                                    <!-- <li>800Hz</li>
-                                    <li>2015</li>
-                                    <li>mpeg4</li>
-                                    <li>1 Side</li>
-                                    <li>3 Port</li>
-                                    <li>1 Rear</li> -->
-                                </ul>
-                            </li> <!-- .product -->
-
-                            <li class="product">
-                                <div class="top-info">
-                                    <div class="check"></div>
-                                    <img src="img/product.png" alt="product image">
-                                    <h3>Sumsung Series 6 J6300</h3>
-                                </div> <!-- .top-info -->
-
-                                <ul class="cd-features-list">
-                                    <li>$600</li>
-                                    <li class="rate"><span>5/5</span></li>
-                                    <li>1080p</li>
-                                    <li>LED</li>
-                                    <li>47.6 inches</li>
-                                    <!-- <li>800Hz</li>
-                                    <li>2015</li>
-                                    <li>mpeg4</li>
-                                    <li>1 Side</li>
-                                    <li>3 Port</li>
-                                    <li>1 Rear</li> -->
-                                </ul>
-                            </li> <!-- .product -->
-
-                            <li class="product">
-                                <div class="top-info">
-                                    <div class="check"></div>
-                                    <img src="img/product.png" alt="product image">
-                                    <h3>Sumsung Series 6 J6300</h3>
-                                </div> <!-- .top-info -->
-
-                                <ul class="cd-features-list">
-                                    <li>$600</li>
-                                    <li class="rate"><span>5/5</span></li>
-                                    <li>1080p</li>
-                                    <li>LED</li>
-                                    <li>47.6 inches</li>
-                                    <!-- <li>800Hz</li>
-                                    <li>2015</li>
-                                    <li>mpeg4</li>
-                                    <li>1 Side</li>
-                                    <li>3 Port</li>
-                                    <li>1 Rear</li> -->
-                                </ul>
-                            </li> <!-- .product -->
-
-                            <li class="product">
-                                <div class="top-info">
-                                    <div class="check"></div>
-                                    <img src="img/product.png" alt="product image">
-                                    <h3>Sumsung Series 6 J6300</h3>
-                                </div> <!-- .top-info -->
-
-                                <ul class="cd-features-list">
-                                    <li>$600</li>
-                                    <li class="rate"><span>5/5</span></li>
-                                    <li>1080p</li>
-                                    <li>LED</li>
-                                    <li>47.6 inches</li>
-                                    <!-- <li>800Hz</li>
-                                    <li>2015</li>
-                                    <li>mpeg4</li>
-                                    <li>1 Side</li>
-                                    <li>3 Port</li>
-                                    <li>1 Rear</li> -->
-                                </ul>
-                            </li> <!-- .product -->
-
-                            <li class="product">
-                                <div class="top-info">
-                                    <div class="check"></div>
-                                    <img src="img/product.png" alt="product image">
-                                    <h3>Sumsung Series 6 J6300</h3>
-                                </div> <!-- .top-info -->
-
-                                <ul class="cd-features-list">
-                                    <li>$600</li>
-                                    <li class="rate"><span>5/5</span></li>
-                                    <li>1080p</li>
-                                    <li>LED</li>
-                                    <li>47.6 inches</li>
-                                    <!-- <li>800Hz</li>
-                                    <li>2015</li>
-                                    <li>mpeg4</li>
-                                    <li>1 Side</li>
-                                    <li>3 Port</li>
-                                    <li>1 Rear</li> -->
-                                </ul>
-                            </li> <!-- .product -->
-
-                            <li class="product">
-                                <div class="top-info">
-                                    <div class="check"></div>
-                                    <img src="img/product.png" alt="product image">
-                                    <h3>Sumsung Series 6 J6300</h3>
-                                </div> <!-- .top-info -->
-
-                                <ul class="cd-features-list">
-                                    <li>$600</li>
-                                    <li class="rate"><span>5/5</span></li>
-                                    <li>1080p</li>
-                                    <li>LED</li>
-                                    <li>47.6 inches</li>
-                                    <!-- <li>800Hz</li>
-                                    <li>2015</li>
-                                    <li>mpeg4</li>
-                                    <li>1 Side</li>
-                                    <li>3 Port</li>
-                                    <li>1 Rear</li> -->
-                                </ul>
-                            </li> <!-- .product -->
-
-                            <li class="product">
-                                <div class="top-info">
-                                    <div class="check"></div>
-                                    <img src="img/product.png" alt="product image">
-                                    <h3>Sumsung Series 6 J6300</h3>
-                                </div> <!-- .top-info -->
-
-                                <ul class="cd-features-list">
-                                    <li>$600</li>
-                                    <li class="rate"><span>5/5</span></li>
-                                    <li>1080p</li>
-                                    <li>LED</li>
-                                    <li>47.6 inches</li>
-                                    <!-- <li>800Hz</li>
-                                    <li>2015</li>
-                                    <li>mpeg4</li>
-                                    <li>1 Side</li>
-                                    <li>3 Port</li>
-                                    <li>1 Rear</li> -->
-                                </ul>
-                            </li> <!-- .product -->
-
-                            <li class="product">
-                                <div class="top-info">
-                                    <div class="check"></div>
-                                    <img src="img/product.png" alt="product image">
-                                    <h3>Sumsung Series 6 J6300</h3>
-                                </div> <!-- .top-info -->
-
-                                <ul class="cd-features-list">
-                                    <li>$600</li>
-                                    <li class="rate"><span>5/5</span></li>
-                                    <li>1080p</li>
-                                    <li>LED</li>
-                                    <li>47.6 inches</li>
-                                    <!-- <li>800Hz</li>
-                                    <li>2015</li>
-                                    <li>mpeg4</li>
-                                    <li>1 Side</li>
-                                    <li>3 Port</li>
-                                    <li>1 Rear</li> -->
-                                </ul>
-                            </li> <!-- .product -->
-                        </ul> <!-- .cd-products-columns -->
-                    </div> <!-- .cd-products-wrapper -->
-                    
-                    <ul class="cd-table-navigation">
-                        <li><a href="#0" class="prev inactive">Prev</a></li>
-                        <li><a href="#0" class="next">Next</a></li>
-                    </ul>
-                </div> <!-- .cd-products-table -->
-            </section> <!-- .cd-products-comparison-table -->
-        <script src="js/jquery-2.1.4.js"></script>
-        <script src="js/main.js"></script> <!-- Resource jQuery -->
-        </body>
+                        Project: https://github.com/CodyHouse/products-comparison-table 
+                        ©2014 - 2020 CodyHouse. A project by @romano_cla and @guerriero_se
+                        License (MIT License) https://github.com/CodyHouse/products-comparison-table-->     
                         
+                        <h2 class="heading wow fadeInUp" style="font-size: 2.5em" data-wow-duration="400ms" data-wow-delay="500ms"><span>Compare</span> your <span>Eats</span></h2>
+                        <section class="cd-products-comparison-table">
+                            <header>
+                                <div class="actions">
+                                    <a href="#0" class="reset">Reset</a>
+                                    <a href="#0" class="filter">Filter</a>
+                                </div>
+                            </header>
+
+                            <div class="cd-products-table">
+                                <div class="features">
+                                    <div class="top-info">Restaurants</div>
+                                    <ul class="cd-features-list">
+                                        <li>Price</li>
+                                        <li>Customer Rating</li>
+                                        <li>Cuisine</li>
+                                        <li>Location</li> <!-- possible implementation of maps -->
+                                        <li>Menu</li>
+                                        <!-- <li>Refresh Rate</li>
+                                        <li>Model Year</li>
+                                        <li>Tuner Technology</li>
+                                        <li>Ethernet Input</li>
+                                        <li>USB Input</li>
+                                        <li>Scart Input</li> -->
+                                    </ul>
+                                </div> <!-- .features -->
+                                
+                                <div class="cd-products-wrapper">
+                                    <ul class="cd-products-columns">
+                                        <li class="product">
+                                            <div class="top-info">
+                                                <div class="check"></div>
+                                                <img src="img/product.png" alt="product image">
+                                                <h3>Sumsung Series 6 J6300</h3>
+                                            </div> <!-- .top-info -->
+
+                                            <ul class="cd-features-list">
+                                                <li>$600</li>
+                                                <li class="rate"><span>5/5</span></li>
+                                                <li>1080p</li>
+                                                <li>LED</li>
+                                                <li>47.6 inches</li>
+                                                <!-- <li>800Hz</li>
+                                                <li>2015</li>
+                                                <li>mpeg4</li>
+                                                <li>1 Side</li>
+                                                <li>3 Port</li>
+                                                <li>1 Rear</li> -->
+                                            </ul>
+                                        </li> <!-- .product -->
+
+                                        <li class="product">
+                                            <div class="top-info">
+                                                <div class="check"></div>
+                                                <img src="img/product.png" alt="product image">
+                                                <h3>Sumsung Series 6 J6300</h3>
+                                            </div> <!-- .top-info -->
+
+                                            <ul class="cd-features-list">
+                                                <li>$600</li>
+                                                <li class="rate"><span>5/5</span></li>
+                                                <li>1080p</li>
+                                                <li>LED</li>
+                                                <li>47.6 inches</li>
+                                                <!-- <li>800Hz</li>
+                                                <li>2015</li>
+                                                <li>mpeg4</li>
+                                                <li>1 Side</li>
+                                                <li>3 Port</li>
+                                                <li>1 Rear</li> -->
+                                            </ul>
+                                        </li> <!-- .product -->
+
+                                        <li class="product">
+                                            <div class="top-info">
+                                                <div class="check"></div>
+                                                <img src="img/product.png" alt="product image">
+                                                <h3>Sumsung Series 6 J6300</h3>
+                                            </div> <!-- .top-info -->
+
+                                            <ul class="cd-features-list">
+                                                <li>$600</li>
+                                                <li class="rate"><span>5/5</span></li>
+                                                <li>1080p</li>
+                                                <li>LED</li>
+                                                <li>47.6 inches</li>
+                                                <!-- <li>800Hz</li>
+                                                <li>2015</li>
+                                                <li>mpeg4</li>
+                                                <li>1 Side</li>
+                                                <li>3 Port</li>
+                                                <li>1 Rear</li> -->
+                                            </ul>
+                                        </li> <!-- .product -->
+
+                                        <li class="product">
+                                            <div class="top-info">
+                                                <div class="check"></div>
+                                                <img src="img/product.png" alt="product image">
+                                                <h3>Sumsung Series 6 J6300</h3>
+                                            </div> <!-- .top-info -->
+
+                                            <ul class="cd-features-list">
+                                                <li>$600</li>
+                                                <li class="rate"><span>5/5</span></li>
+                                                <li>1080p</li>
+                                                <li>LED</li>
+                                                <li>47.6 inches</li>
+                                                <!-- <li>800Hz</li>
+                                                <li>2015</li>
+                                                <li>mpeg4</li>
+                                                <li>1 Side</li>
+                                                <li>3 Port</li>
+                                                <li>1 Rear</li> -->
+                                            </ul>
+                                        </li> <!-- .product -->
+
+                                        <li class="product">
+                                            <div class="top-info">
+                                                <div class="check"></div>
+                                                <img src="img/product.png" alt="product image">
+                                                <h3>Sumsung Series 6 J6300</h3>
+                                            </div> <!-- .top-info -->
+
+                                            <ul class="cd-features-list">
+                                                <li>$600</li>
+                                                <li class="rate"><span>5/5</span></li>
+                                                <li>1080p</li>
+                                                <li>LED</li>
+                                                <li>47.6 inches</li>
+                                                <!-- <li>800Hz</li>
+                                                <li>2015</li>
+                                                <li>mpeg4</li>
+                                                <li>1 Side</li>
+                                                <li>3 Port</li>
+                                                <li>1 Rear</li> -->
+                                            </ul>
+                                        </li> <!-- .product -->
+
+                                        <li class="product">
+                                            <div class="top-info">
+                                                <div class="check"></div>
+                                                <img src="img/product.png" alt="product image">
+                                                <h3>Sumsung Series 6 J6300</h3>
+                                            </div> <!-- .top-info -->
+
+                                            <ul class="cd-features-list">
+                                                <li>$600</li>
+                                                <li class="rate"><span>5/5</span></li>
+                                                <li>1080p</li>
+                                                <li>LED</li>
+                                                <li>47.6 inches</li>
+                                                <!-- <li>800Hz</li>
+                                                <li>2015</li>
+                                                <li>mpeg4</li>
+                                                <li>1 Side</li>
+                                                <li>3 Port</li>
+                                                <li>1 Rear</li> -->
+                                            </ul>
+                                        </li> <!-- .product -->
+
+                                        <li class="product">
+                                            <div class="top-info">
+                                                <div class="check"></div>
+                                                <img src="img/product.png" alt="product image">
+                                                <h3>Sumsung Series 6 J6300</h3>
+                                            </div> <!-- .top-info -->
+
+                                            <ul class="cd-features-list">
+                                                <li>$600</li>
+                                                <li class="rate"><span>5/5</span></li>
+                                                <li>1080p</li>
+                                                <li>LED</li>
+                                                <li>47.6 inches</li>
+                                                <!-- <li>800Hz</li>
+                                                <li>2015</li>
+                                                <li>mpeg4</li>
+                                                <li>1 Side</li>
+                                                <li>3 Port</li>
+                                                <li>1 Rear</li> -->
+                                            </ul>
+                                        </li> <!-- .product -->
+
+                                        <li class="product">
+                                            <div class="top-info">
+                                                <div class="check"></div>
+                                                <img src="img/product.png" alt="product image">
+                                                <h3>Sumsung Series 6 J6300</h3>
+                                            </div> <!-- .top-info -->
+
+                                            <ul class="cd-features-list">
+                                                <li>$600</li>
+                                                <li class="rate"><span>5/5</span></li>
+                                                <li>1080p</li>
+                                                <li>LED</li>
+                                                <li>47.6 inches</li>
+                                                <!-- <li>800Hz</li>
+                                                <li>2015</li>
+                                                <li>mpeg4</li>
+                                                <li>1 Side</li>
+                                                <li>3 Port</li>
+                                                <li>1 Rear</li> -->
+                                            </ul>
+                                        </li> <!-- .product -->
+                                    </ul> <!-- .cd-products-columns -->
+                                </div> <!-- .cd-products-wrapper -->
+                                
+                                <ul class="cd-table-navigation">
+                                    <li><a href="#0" class="prev inactive">Prev</a></li>
+                                    <li><a href="#0" class="next">Next</a></li>
+                                </ul>
+                            </div> <!-- .cd-products-table -->
+                        </section> <!-- .cd-products-comparison-table -->
+                                    
                 </div><!-- .col-md-12 close -->
             </div><!-- .row close -->
         </div><!-- .containe close -->

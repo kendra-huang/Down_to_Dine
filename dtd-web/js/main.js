@@ -340,8 +340,37 @@ function yelpRequest(loc, desc) {
     }).then(response => {
         return response.json();
     }).then(json => {
-        console.log(json    );
+        console.log(json);
     }).catch(error => {
         console.log('uh oh', error);
     });
+}
+
+function locationCheck() {
+    var inputfield = document.getElementById("location");
+    if (inputfield.value == 'Your Location'){
+        navigator.geolocation.getCurrentPosition(position => {
+            var GEOCODING = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' + position.coords.latitude + '%2C' + position.coords.longitude + '&language=en';
+            $.getJSON(GEOCODING).done(location => {
+                inputfield.value = location;
+            })
+        }, showError);
+    }
+}
+
+function showError(error) {
+    switch(error.code) {    
+        case error.PERMISSION_DENIED:
+          x.innerHTML = "User denied the request for Geolocation."
+          break;
+        case error.POSITION_UNAVAILABLE:
+          x.innerHTML = "Location information is unavailable."
+          break;
+        case error.TIMEOUT:
+          x.innerHTML = "The request to get user location timed out."
+          break;
+        case error.UNKNOWN_ERROR:
+          x.innerHTML = "An unknown error occurred."
+          break;
+      }
 }
