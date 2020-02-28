@@ -23,8 +23,6 @@
 
 // Place any jQuery/helper plugins in here.
 
-// Place any jQuery/helper plugins in here.
-
 /*
  *  jQuery OwlCarousel v1.3.3
  *

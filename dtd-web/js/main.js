@@ -4,6 +4,36 @@ jQuery(document).ready(function($){
     // Makes the Nav-bar stick to the top
     $("#navigation").sticky();    
 
+
+    $("#owl-example").owlCarousel({
+        // Most important owl features
+        items : 4,
+        pagination : true,
+        paginationSpeed : 1000,
+        navigation : true,
+        navigationText : ["","<i class='fa fa-angle-right'></i>"],
+        slideSpeed : 800,
+     });
+
+    var listing = $("#owl-listing");
+    listing.owlCarousel({
+         items: 4,
+         navigation: true,
+         paginationSpeed: 600,
+         slideSpeed: 500,
+     });
+
+     // listener that makes the listing scroll horizontally with the mouse wheel
+     listing.on('mousewheel', function (e) {
+        if (e.originalEvent.deltaY>0) {
+            console.log('scroll-down');
+            listing.trigger('owl.next');
+        } else {
+            console.log('scroll-up');
+            listing.trigger('owl.prev');
+        }
+        e.preventDefault();
+    });
 //Initiate WOW JS
     new WOW().init();
 
