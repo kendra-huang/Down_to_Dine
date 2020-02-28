@@ -366,8 +366,9 @@ function yelpRequest(loc, desc) {
         }
         return response;
     }).then(response => {
-        var res = response.json();
-        console.log(res);
+        return response.json();
+    }).then(json => {
+        console.log(json    );
     }).catch(error => {
         console.log('uh oh', error);
     });
