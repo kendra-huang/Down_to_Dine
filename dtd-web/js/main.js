@@ -32,7 +32,47 @@ jQuery(document).ready(function($){
          scrollSpeed: 1200
     });
     */
-    
+
+   const apiKey = 'EjKBKGiEKnrhbi-wjpdU-5Ch3Xs8QbL3dKnz3efiJKLLND6qSPoTAH469ah0TQ5C67qQKiLZDo7HNZas-JCEbb0Tz70D-t2pA6SdxgcAUwz2JdwMOZm7LGG7e3RQXnYx';
+
+   // Yelp api Function calls
+   
+   function search_btn_press() {
+       var description = document.getElementById("description").value;
+       var location = document.getElementById("location").value;
+       console.log('Search Bar Params: ', description, location);
+       yelpRequest(location, description);
+   }
+   
+   function yelpRequest(loc, desc) { 
+       var yelp_corsanywhere = "https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/";
+       var searchType = 'businesses/search?';
+       var params = {}
+       params.location  = loc != '' ? loc : undefined;
+       params.term      = desc != '' ? desc : undefined;
+   
+       const header = {
+           method: 'GET',
+           headers: new Headers({
+               "Authorization": "Bearer "+apiKey
+           })
+       }
+       fetch(
+           yelp_corsanywhere + searchType + $.param(params),
+           header
+       ).then(response => {
+           if (!response.ok){
+               throw Error(response.statusText);
+           }
+           return response;
+       }).then(response => {
+           return response.json();
+       }).then(json => {
+           console.log(json    );
+       }).catch(error => {
+           console.log('uh oh', error);
+       });
+   }
 
 //Initiate WOW JS
     new WOW().init();
@@ -332,44 +372,3 @@ jQuery(document).ready(function($){
     }
 
 });
-
-const apiKey = 'EjKBKGiEKnrhbi-wjpdU-5Ch3Xs8QbL3dKnz3efiJKLLND6qSPoTAH469ah0TQ5C67qQKiLZDo7HNZas-JCEbb0Tz70D-t2pA6SdxgcAUwz2JdwMOZm7LGG7e3RQXnYx';
-
-// Yelp api Function calls
-
-function search_btn_press() {
-    var description = document.getElementById("description").value;
-    var location = document.getElementById("location").value;
-    console.log('Search Bar Params: ', description, location);
-    yelpRequest(location, description);
-}
-
-function yelpRequest(loc, desc) { 
-    var yelp_corsanywhere = "https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/";
-    var searchType = 'businesses/search?';
-    var params = {}
-    params.location  = loc != '' ? loc : undefined;
-    params.term      = desc != '' ? desc : undefined;
-
-    const header = {
-        method: 'GET',
-        headers: new Headers({
-            "Authorization": "Bearer "+apiKey
-        })
-    }
-    fetch(
-        yelp_corsanywhere + searchType + $.param(params),
-        header
-    ).then(response => {
-        if (!response.ok){
-            throw Error(response.statusText);
-        }
-        return response;
-    }).then(response => {
-        return response.json();
-    }).then(json => {
-        console.log(json    );
-    }).catch(error => {
-        console.log('uh oh', error);
-    });
-}
