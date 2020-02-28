@@ -128,7 +128,9 @@ a:active {
 #hero-area {
   position: relative;
   min-height: 500px;
-  background: url("../images/header.jpg");
+  background: 
+    linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3 )),
+    url("https://c.pxhere.com/photos/c8/ea/appetizer_bowl_delicious_dish_epicure_food_fries_guacamole-1557385.jpg!d?fbclid=IwAR22MVOpYtBF4OlhukGHnR82LxCIqL-uSpicYH5cjSLSmuLaVym2KT7n2TE");
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;

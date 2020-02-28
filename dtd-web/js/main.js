@@ -1,5 +1,5 @@
 
-$(document).ready(function(){
+jQuery(document).ready(function($){
     
     // Makes the Nav-bar stick to the top
     $("#navigation").sticky();    
@@ -54,8 +54,8 @@ function yelpRequest(loc, desc) {
     var yelp_corsanywhere = "https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/";
     var searchType = 'businesses/search?';
     var params = {}
-    params['location']  = loc != '' ? loc : undefined;
-    params['term']      = desc != '' ? desc : undefined;
+    params.location  = loc != '' ? loc : undefined;
+    params.term      = desc != '' ? desc : undefined;
 
     const header = {
         method: 'GET',
@@ -67,8 +67,14 @@ function yelpRequest(loc, desc) {
         yelp_corsanywhere + searchType + $.param(params),
         header
     ).then(response => {
-      return response.json();
-    }).then(json => {
-      console.log(json);
+        if (!response.ok){
+            throw Error(response.statusText);
+        }
+        return response;
+    }).then(response => {
+        var res = response.json();
+        console.log(res);
+    }).catch(error => {
+        console.log('uh oh', error);
     });
 }
