@@ -169,9 +169,18 @@ th, td {
 /*--
     header-img start Start
 --*/
+
 #hero-area {
   position: relative;
+  min-height: 500px;
+  background: 
+    linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3 )),
+    url("https://c.pxhere.com/photos/c8/ea/appetizer_bowl_delicious_dish_epicure_food_fries_guacamole-1557385.jpg!d?fbclid=IwAR22MVOpYtBF4OlhukGHnR82LxCIqL-uSpicYH5cjSLSmuLaVym2KT7n2TE");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
 }
+/*
 #hero-area:before {
   content: "";
   position: absolute;
@@ -184,25 +193,36 @@ th, td {
   background: url("../images/overlay-pattern.png") #000000;
   opacity: 0.3;
 }
+*/
 .btn-container {
   text-align: center;
+  padding: 25px 10%;
 }
 .btn-group {
-  display: block;
-  width: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
 }
 .btn-group1 {
+  display: inline-flex;
   padding: 24px;
-  width: 40%;
+  width: 45%;
+  border: 1px solid #dbdbdb;
 }
 .btn-group2 {
+  display: inline-flex;
   padding: 24px;
-  width: 30%;
+  width: 35%;
+  border: 1px solid #dbdbdb;
 }
 .btn-form {
-  padding: 26px;
+  display: inline-block;
+  padding: 25px;
+  width: 20%;
   background: #ff3a6d;
   color: white;
+  text-align: center;
   border: none;
 }
 
