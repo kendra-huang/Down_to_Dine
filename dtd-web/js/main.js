@@ -316,12 +316,32 @@ function search_btn_press() {
     yelpRequest(location, description);
 }
 
-function yelpRequest(loc, desc) { 
+
+/*
+    GUIDE TO USE "yelpRequest" FUNCTION
+    ----------------------------------
+    Access the businesses arrays by calling:
+
+    yelpRequest(# parameters based on your needs, put 'undefined' for those u skip #).then(response => {
+        # response is the business array #
+        # for Ex: #
+        var business = response.businesses[i]   // holds the array for the i'th business
+
+        // access business properties as variables
+        business.rating                         // holds the rating for the business
+    });
+*/
+
+// Several api variables listed out for usage or to leave blank
+async function yelpRequest(loc=undefined, term=undefined, lat=undefined, lon=undefined) { 
     var yelp_corsanywhere = "https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/";
     var searchType = 'businesses/search?';
     var params = {}
-    params.location  = loc != '' ? loc : undefined;
-    params.term      = desc != '' ? desc : undefined;
+    // Check if each param is enterd and add them to the param list
+    if (loc != undefined)  params.location = loc;
+    if (term != undefined) params.term = term;
+    if (lat != undefined)  params.latitude = lat;
+    if (lon != undefined)  params.longitude = lon;
 
     const header = {
         method: 'GET',
@@ -329,48 +349,57 @@ function yelpRequest(loc, desc) {
             "Authorization": "Bearer "+apiKey
         })
     }
-    fetch(
-        yelp_corsanywhere + searchType + $.param(params),
-        header
-    ).then(response => {
-        if (!response.ok){
-            throw Error(response.statusText);
+    var response;
+    try {
+        // turn params into a queuestring and fetch 
+        response = await fetch(
+            yelp_corsanywhere + searchType + $.param(params),
+            header
+        )
+        try {
+            // turn the response into a Json/ array format
+            response = await response.json();
+            console.log(response);
+        } catch (error) {
+            console.log('JSON ',error);
         }
-        return response;
-    }).then(response => {
-        return response.json();
-    }).then(json => {
-        console.log(json);
-    }).catch(error => {
-        console.log('uh oh', error);
-    });
-}
-
-function locationCheck() {
-    var inputfield = document.getElementById("location");
-    if (inputfield.value == 'Your Location'){
-        navigator.geolocation.getCurrentPosition(position => {
-            var GEOCODING = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' + position.coords.latitude + '%2C' + position.coords.longitude + '&language=en';
-            $.getJSON(GEOCODING).done(location => {
-                inputfield.value = location;
-            })
-        }, showError);
+    } catch(error) {
+        console.log('FETCH ', error);
     }
+    // return the promise of the JSON for callback usage 
+    return response;
 }
 
-function showError(error) {
-    switch(error.code) {    
-        case error.PERMISSION_DENIED:
-          x.innerHTML = "User denied the request for Geolocation."
-          break;
-        case error.POSITION_UNAVAILABLE:
-          x.innerHTML = "Location information is unavailable."
-          break;
-        case error.TIMEOUT:
-          x.innerHTML = "The request to get user location timed out."
-          break;
-        case error.UNKNOWN_ERROR:
-          x.innerHTML = "An unknown error occurred."
-          break;
-      }
+// Sets the City and State of the user into the location bar whenever
+// they choose the "Your Location" option
+function setLocation() {
+    var inputfield = document.getElementById("location");
+    if (inputfield.value == "Your Location") {
+        if (navigator.geolocation){
+            inputfield.value = "Finding Location...";
+            navigator.geolocation.getCurrentPosition(position => {
+                yelpRequest(undefined, undefined, position.coords.latitude, position.coords.longitude).then(response => {
+                    let first = response.businesses[0];
+                    inputfield.value = first.location.city + ', ' + first.location.state;
+                });
+            },error => {
+                switch(error.code) {    
+                    case error.PERMISSION_DENIED:
+                    console.log("User denied the request for Geolocation.");
+                    break;
+                    case error.POSITION_UNAVAILABLE:
+                    alert("Location information is unavailable.");
+                    break;
+                    case error.TIMEOUT:
+                    alert("The request to get user location timed out.");
+                    break;
+                    case error.UNKNOWN_ERROR:
+                    alert("An unknown error occurred.");
+                    break;
+                }
+            });
+        }else{
+            console.log("geolocation not permitted");
+        }
+    }
 }

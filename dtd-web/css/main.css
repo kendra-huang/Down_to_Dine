@@ -208,17 +208,20 @@ th, td {
   display: inline-flex;
   padding: 24px;
   width: 45%;
-  border: 1px solid #dbdbdb;
+  border-left: none;
+  border-top: none;
+  border-bottom: none;
+  border-right: 1px solid #dbdbdb;
 }
 .btn-group2 {
   display: inline-flex;
   padding: 24px;
   width: 35%;
-  border: 1px solid #dbdbdb;
+  border: none;
 }
 .btn-form {
   display: inline-block;
-  padding: 27px;
+  padding: 26px;
   width: 20%;
   background: #ff3a6d;
   color: white;
