@@ -53,6 +53,51 @@ a:active {
   text-decoration: none !important;
   font-size: 15px;
 }
+
+/*============== Table styling ================*/
+
+* {
+  box-sizing: border-box;
+}
+body {
+  /*font: 14px/1 Arial, sans-serif;
+  */
+  font-family: myfont;
+  font-size: 14px;
+  font-weight: 400;
+}
+table {
+  border-collapse: collapse;
+  background: white;
+  table-layout: fixed;
+  width: 100%;
+}
+th, td {
+  padding: 8px 16px;
+  border: 1px solid #ddd;
+  width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pane {
+  background: #eee;
+}
+/* horizontal and vertical scrolling
+.pane-hScroll {
+  overflow: auto;
+  width: 400px;
+  background: green;
+}
+.pane-vScroll {
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 200px;
+  background: red;
+}
+*/
+
 /*============== Mixins style start ================*/
 .overlay-effect {
   content: "";
