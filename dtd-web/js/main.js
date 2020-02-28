@@ -1,6 +1,6 @@
 
-$(document).ready(function(){
-    
+// $(document).ready(function(){
+jQuery(document).ready(function($){    
     // Makes the Nav-bar stick to the top
     $("#navigation").sticky();
     
