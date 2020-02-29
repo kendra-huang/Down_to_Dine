@@ -45,7 +45,7 @@
         <!-- =========================
             search bar div 
         ========================== -->
-        <form class="btn-container">
+        <form class="btn-container wow fadeInUp" data-wow-duration="500ms" data-wow-delay="150">
             <div class="btn-group">
                 <input type="text" autocomplete="off" list="suggested-descriptions" id="description" placeholder="What are your looking for?" class="btn-group1" value="">
                 <datalist id="suggested-descriptions">
@@ -73,27 +73,26 @@
                           <div class="container-fluid">
                             <!-- Brand and toggle get grouped for better mobile display -->
                             <div class="navbar-header">
-                              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                                <span class="sr-only">Toggle navigation</span>
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                              </button>
-                                  <a class="navbar-brand" href="#">
+                                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                                    <span class="sr-only">Toggle navigation</span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                </button>
+                                <a class="navbar-brand" href="#">
                                     <img src="images/logo.png" alt="Logo">
-                                  </a>
+                                </a>
                             </div>
-
                             <!-- Collect the nav links, forms, and other content for toggling -->
                             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                              <ul class="nav navbar-nav navbar-right" id="top-nav">
-                                <li><a href="#hero-area">Home</a></li>
-                                <li><a href="#blog">Trending</a></li>
-                                <li><a href="#about-us">about us</a></li>
-                                <li><a href="#price">menu</a></li>
-                                <li><a href="#subscribe">news</a></li>
-                                <li><a href="#contact-us">contacts</a></li>
-                              </ul>
+                                <ul class="nav navbar-nav navbar-right" id="top-nav">
+                                    <li><a href="#hero-area">Home</a></li>
+                                    <li><a href="#blog">Trending</a></li>
+                                    <li><a href="#listing">Listing</a></li>
+                                    <li><a href="#about-us">about us</a></li>
+                                    <li><a href="#subscribe">news</a></li>
+                                    <li><a href="#contact-us">contacts</a></li>
+                                </ul>
                             </div><!-- /.navbar-collapse -->
                           </div><!-- /.container-fluid -->
                         </nav>
@@ -178,24 +177,6 @@
                                     <p>Prepared in true New England fash-ion. Tender all-white meat chicken simmered...</p>
                                 </div>
                             </li>
-                            <li class="wow fadeInLeft" data-wow-duration="300ms" data-wow-delay="500ms">
-                                <div class="content-left">
-                                    <h3>Homestyle Chicken Pot Pie</h3>
-                                    <p>Prepared in true New England fash-ion. Tender all-white meat chicken simmered...</p>
-                                </div>
-                                <div class="blog-img-2">
-                                    <img src="images/blog/blog-img-3.jpg" alt="blog-img">
-                                </div>
-                            </li>
-                            <li class="wow fadeInLeft" data-wow-duration="300ms" data-wow-delay="600ms">
-                                <div class="content-left">
-                                    <h3>Homestyle Chicken Pot Pie</h3>
-                                    <p>Prepared in true New England fash-ion. Tender all-white meat chicken simmered...</p>
-                                </div>
-                                <div class="blog-img-2">
-                                    <img src="images/blog/blog-img-4.jpg" alt="blog-img">
-                                </div>
-                            </li>
                             <li class="wow fadeInLeft" data-wow-duration="300ms" data-wow-delay="700ms">
                                 <div class="blog-img">
                                     <img src="images/blog/blog-img-5.jpg" alt="blog-img">
@@ -237,14 +218,20 @@
      <!--
     listing start
     ============================ -->
-    <section id="blog">
+    <section id="listing">
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
                     <div class="block">
                         <h1 class="heading">Latest <span>From</span> the <span>Blog</span></h1>
-                        <ul id="owl-listing">
-                            <li class="wow fadeInLeft" data-wow-duration="300ms" data-wow-delay="300ms">
+                        <div class="listing-filters">
+                            <button>fds</button>
+                            <button>fff</button>
+                            <button>ff</button>
+                            <button> fff</button>
+                        </div>
+                        <ul id ="listing-area">
+                            <li>
                                 <div class="blog-img">
                                     <img src="images/blog/blog-img-1.jpg" alt="blog-img">
                                 </div>
@@ -253,7 +240,7 @@
                                     <p>Prepared in true New England fash-ion. Tender all-white meat chicken simmered...</p>
                                 </div>
                             </li>
-                            <li class="wow fadeInLeft" data-wow-duration="300ms" data-wow-delay="400ms">
+                            <li>
                                 <div class="blog-img">
                                     <img src="images/blog/blog-img-2.jpg" alt="blog-img">
                                 </div>
@@ -262,25 +249,7 @@
                                     <p>Prepared in true New England fash-ion. Tender all-white meat chicken simmered...</p>
                                 </div>
                             </li>
-                            <li class="wow fadeInLeft" data-wow-duration="300ms" data-wow-delay="500ms">
-                                <div class="content-left">
-                                    <h3>Homestyle Chicken Pot Pie</h3>
-                                    <p>Prepared in true New England fash-ion. Tender all-white meat chicken simmered...</p>
-                                </div>
-                                <div class="blog-img-2">
-                                    <img src="images/blog/blog-img-3.jpg" alt="blog-img">
-                                </div>
-                            </li>
-                            <li class="wow fadeInLeft" data-wow-duration="300ms" data-wow-delay="600ms">
-                                <div class="content-left">
-                                    <h3>Homestyle Chicken Pot Pie</h3>
-                                    <p>Prepared in true New England fash-ion. Tender all-white meat chicken simmered...</p>
-                                </div>
-                                <div class="blog-img-2">
-                                    <img src="images/blog/blog-img-4.jpg" alt="blog-img">
-                                </div>
-                            </li>
-                            <li class="wow fadeInLeft" data-wow-duration="300ms" data-wow-delay="700ms">
+                            <li>
                                 <div class="blog-img">
                                     <img src="images/blog/blog-img-5.jpg" alt="blog-img">
                                 </div>
@@ -289,7 +258,7 @@
                                     <p>Prepared in true New England fash-ion. Tender all-white meat chicken simmered...</p>
                                 </div>
                             </li>
-                            <li class="wow fadeInUp" data-wow-duration="300ms" data-wow-delay="800ms">
+                            <li>
                                 <div class="blog-img">
                                     <img src="images/blog/blog-img-6.jpg" alt="blog-img">
                                 </div>
@@ -298,8 +267,43 @@
                                     <p>Prepared in true New England fash-ion. Tender all-white meat chicken simmered...</p>
                                 </div>
                             </li>
+                            <li>
+                                <div class="blog-img">
+                                    <img src="images/blog/blog-img-1.jpg" alt="blog-img">
+                                </div>
+                                <div class="content-right">
+                                    <h3>Homestyle Chicken Pot Pie</h3>
+                                    <p>Prepared in true New England fash-ion. Tender all-white meat chicken simmered...</p>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="blog-img">
+                                    <img src="images/blog/blog-img-1.jpg" alt="blog-img">
+                                </div>
+                                <div class="content-right">
+                                    <h3>Homestyle Chicken Pot Pie</h3>
+                                    <p>Prepared in true New England fash-ion. Tender all-white meat chicken simmered...</p>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="blog-img">
+                                    <img src="images/blog/blog-img-1.jpg" alt="blog-img">
+                                </div>
+                                <div class="content-right">
+                                    <h3>Homestyle Chicken Pot Pie</h3>
+                                    <p>Prepared in true New England fash-ion. Tender all-white meat chicken simmered...</p>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="blog-img">
+                                    <img src="images/blog/blog-img-1.jpg" alt="blog-img">
+                                </div>
+                                <div class="content-right">
+                                    <h3>Homestyle Chicken Pot Pie</h3>
+                                    <p>Prepared in true New England fash-ion. Tender all-white meat chicken simmered...</p>
+                                </div>
+                            </li>
                         </ul>
-                        <a class="btn btn-default btn-more-info wow bounceIn" data-wow-duration="500ms" data-wow-delay="1200ms" href="#" role="button">More Info</a>
                     </div>
                 </div><!-- .col-md-12 close -->
             </div><!-- .row close -->
@@ -323,14 +327,14 @@
                         
                         <h2 class="heading wow fadeInUp" style="font-size: 2.5em" data-wow-duration="400ms" data-wow-delay="500ms"><span>Compare</span> your <span>Eats</span></h2>
                         <section class="cd-products-comparison-table">
-                            <header>
+                            <header class="wow fadeInUp">
                                 <div class="actions">
                                     <a href="#0" class="reset">Reset</a>
                                     <a href="#0" class="filter">Filter</a>
                                 </div>
                             </header>
 
-                            <div class="cd-products-table">
+                            <div class="cd-products-table wow fadeInUp" data-wow-duration="500ms" data-wow-delay="300">
                                 <div class="features">
                                     <div class="top-info">Restaurants</div>
                                     <ul class="cd-features-list">

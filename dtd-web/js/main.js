@@ -4,7 +4,6 @@ jQuery(document).ready(function($){
     // Makes the Nav-bar stick to the top
     $("#navigation").sticky();    
 
-
     $("#owl-example").owlCarousel({
         // Most important owl features
         items : 4,
@@ -13,27 +12,16 @@ jQuery(document).ready(function($){
         navigation : true,
         navigationText : ["","<i class='fa fa-angle-right'></i>"],
         slideSpeed : 800,
-     });
-
-    var listing = $("#owl-listing");
-    listing.owlCarousel({
-         items: 4,
-         navigation: true,
-         paginationSpeed: 600,
-         slideSpeed: 500,
-     });
-
-     // listener that makes the listing scroll horizontally with the mouse wheel
-     listing.on('mousewheel', function (e) {
-        if (e.originalEvent.deltaY>0) {
-            console.log('scroll-down');
-            listing.trigger('owl.next');
-        } else {
-            console.log('scroll-up');
-            listing.trigger('owl.prev');
-        }
-        e.preventDefault();
     });
+
+    $("#listing-area").scroll(function() {
+        var list = $(this);
+        if(list[0].scrollHeight - list.scrollTop() <= list.height()){
+            list = document.getElementById("listing-area");
+            loadLocations(list, 10);
+        }
+    });
+
 //Initiate WOW JS
     new WOW().init();
 
@@ -333,19 +321,41 @@ jQuery(document).ready(function($){
 
 });
 
+// Stores the most recent yelp API search
+var mostRecentSearchOffset = 0;
 
-
-const apiKey = 'EjKBKGiEKnrhbi-wjpdU-5Ch3Xs8QbL3dKnz3efiJKLLND6qSPoTAH469ah0TQ5C67qQKiLZDo7HNZas-JCEbb0Tz70D-t2pA6SdxgcAUwz2JdwMOZm7LGG7e3RQXnYx';
+function loadLocations(list, amount) {
+    console.log('called');
+    yelpRequest(document.getElementById("location").value,
+                document.getElementById("description").value).then(response => {
+        if (response != undefined){
+            for (i = 0; i < amount; i++){
+                list.innerHTML = list.innerHTML +
+                '<li><div class="blog-img"><img src="'+
+                // img address
+                response.businesses[i].image_url
+                +'" alt="blog-img">'+'</div><div class="content-right"><h3>'+
+                //rating
+                response.businesses[i].rating
+                +'</h3></div></li>';
+            }
+        }
+    });
+    mostRecentSearchOffset += amount;
+}
 
 // Yelp api Function calls
+const apiKey = 'EjKBKGiEKnrhbi-wjpdU-5Ch3Xs8QbL3dKnz3efiJKLLND6qSPoTAH469ah0TQ5C67qQKiLZDo7HNZas-JCEbb0Tz70D-t2pA6SdxgcAUwz2JdwMOZm7LGG7e3RQXnYx';
 
 function search_btn_press() {
     var description = document.getElementById("description").value;
     var location = document.getElementById("location").value;
     console.log('Search Bar Params: ', description, location);
-    yelpRequest(location, description);
+    yelpRequest(location, description).then(response => {
+        mostRecentSearchOffset = 0;
+    });
+    window.location.href = '#listing';
 }
-
 
 /*
     GUIDE TO USE "yelpRequest" FUNCTION
@@ -363,15 +373,18 @@ function search_btn_press() {
 */
 
 // Several api variables listed out for usage or to leave blank
-async function yelpRequest(loc=undefined, term=undefined, lat=undefined, lon=undefined) { 
+async function yelpRequest(loc=undefined, term=undefined, off=mostRecentSearchOffset, lat=undefined, lon=undefined) { 
     var yelp_corsanywhere = "https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/";
     var searchType = 'businesses/search?';
-    var params = {}
+    var params = {
+        offset: off
+    }
     // Check if each param is enterd and add them to the param list
     if (loc != undefined)  params.location = loc;
     if (term != undefined) params.term = term;
     if (lat != undefined)  params.latitude = lat;
     if (lon != undefined)  params.longitude = lon;
+
 
     const header = {
         method: 'GET',
@@ -408,7 +421,7 @@ function setLocation() {
         if (navigator.geolocation){
             inputfield.value = "Finding Location...";
             navigator.geolocation.getCurrentPosition(position => {
-                yelpRequest(undefined, undefined, position.coords.latitude, position.coords.longitude).then(response => {
+                yelpRequest(undefined, undefined, undefined, position.coords.latitude, position.coords.longitude).then(response => {
                     let first = response.businesses[0];
                     inputfield.value = first.location.city + ', ' + first.location.state;
                 });
