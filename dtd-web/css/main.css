@@ -294,7 +294,6 @@ th, td {
 .group label {
   width: 100%;
   position: relative;
-  margin-right: 1em;
   padding-left: 2em;
   padding-right: 1em;
   line-height: 2;
@@ -320,7 +319,7 @@ th, td {
 /* Checked */
 .group input[type="checkbox"]:checked + label, input[type="radio"]:checked + label {
   padding-left: 1em;
-  padding-right: 0em; /* why is the padding messed up */
+  margin-right: 1em;
   color: #0057a8;
   z-index: 0;
 }
