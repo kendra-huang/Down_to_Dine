@@ -234,6 +234,13 @@ th, td {
   box-shadow:  5px 0px 5px rgba(0, 0, 0, 0.5)
 }
 
+#div_top_hypers {
+  display:inline;      
+}
+#ul_top_hypers li{
+  display: inline;
+}
+
 ::-webkit-scrollbar-track
 {
 	background-color: #F5F5F5;
