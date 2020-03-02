@@ -22,6 +22,11 @@ jQuery(document).ready(function($){
         }
     });
 
+    /*$("#price").getBusinessInfo(function() {
+        //var priceList = $(this);
+        
+    });*/
+
 //Initiate WOW JS
     new WOW().init();
 
@@ -445,4 +450,72 @@ function setLocation() {
             console.log("geolocation not permitted");
         }
     }
+}
+
+// number of times user adds restaurant
+var count = 0;
+function userAddClick() {      
+    //document.getElementById("result").innerHTML = "Restaurant added ";
+    count++;
+}
+
+function userRemoveClick() {
+    //document.getElementById("remove").innerHTML = "Restaurant removed ";
+    count--;
+}
+
+/*function search_btn_press() {
+    var description = document.getElementById("description").value;
+    var location = document.getElementById("location").value;
+    console.log('Search Bar Params: ', description, location);
+    yelpRequest(location, description).then(response => {
+        mostRecentSearchOffset = 0;
+    });
+    window.location.href = '#listing';
+}*/
+
+// total number of businesses in array
+var numBusiness = 0;
+/*$("#listing-area").scroll(function() {
+    var list = $(this);
+    if(list[0].scrollHeight - list.scrollTop() <= list.height()){
+        list = document.getElementById("listing-area");
+        loadLocations(list, 10);
+    }
+});*/
+function getBusinessInfo(priceList, count) {
+    console.log('called');
+    yelpRequest(document.getElementById("name").value, 
+                document.getElementById("price").value,
+                document.getElementById("rating").value,
+                document.getElementById("location").value).then(response => {
+        if (response != undefined){
+            for (i = 0; i < count; i++){
+                /*priceList.innerHTML = priceList.innerHTML +
+                '<li><div '*/
+            }
+        }
+    });
+}        
+
+//CUISINE
+        //LOCATION
+function loadBusinessInfo(list, amount) {
+    console.log('called');
+    yelpRequest(document.getElementById("location").value,
+                document.getElementById("description").value).then(response => {
+        if (response != undefined){
+            for (i = 0; i < amount; i++){
+                /*list.innerHTML = list.innerHTML +
+                '<li><div class="blog-img"><img src="'+
+                // img address
+                response.businesses[i].image_url
+                +'" alt="blog-img">'+'</div><div class="content-right"><h3>'+
+                //rating
+                response.businesses[i].rating
+                +'</h3></div></li>';*/
+            }
+        }
+    });
+    //mostRecentSearchOffset += amount;
 }
