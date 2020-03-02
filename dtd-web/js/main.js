@@ -21,6 +21,42 @@ jQuery(document).ready(function($){
             loadLocations(list, 10);
         }
     });
+    
+    var objArray = [];
+    $('.imgbtn').click(function () {
+        console.log('called');
+        var name = document.getElementById("name").value;
+        var price = document.getElementById("price").value;
+        var rating = document.getElementById("rating").value;
+        var businessLoc = document.getElementById("location").value;
+        var businessID = document.getElementById("business").value;
+        yelpRequest(name, price, rating, businessLoc).then(response => {
+        });
+
+        var title = $(this).parent().parent().find('span').html();
+        if (!alreadyAdded(title)) {
+            var image = $(this).parent().parent().find('img').prop('src');
+            var newLength = objArray.push({
+                id: objArray.length + 1,
+                title: title,
+                image: image,
+                description: 'Example'
+            });
+            $('#lblCart').html(newLength);
+        }
+        else {
+            alert("Already added");
+        }
+    });
+
+    function alreadyAdded(itemTitle) {
+        for (var i = 0; i < objArray.length; i++) {
+            if (objArray[i].title === itemTitle) {
+                return true;
+            }
+        }
+        return false;
+    };
 
     /*$("#price").getBusinessInfo(function() {
         //var priceList = $(this);
@@ -358,15 +394,58 @@ function loadLocations(list, amount) {
         offset:     mostRecentSearchOffset
     }).then(response => {
         if (response != undefined){
+            var starPic = '';
             for (i = 0; i < amount; i++){
+                var rating = response.businesses[i].rating;
+                switch(rating){
+                    case 0: 
+                        starPic = '../yelp stars/yelp_stars/web_and_ios/regular/regular_0.png';
+                        break;
+                    case 1:
+                        starPic = '../yelp stars/yelp_stars/web_and_ios/regular/regular_1.png';
+                        break;
+                    case 1.5:
+                        starPic = '../yelp stars/yelp_stars/web_and_ios/regular/regular_1_half.png';
+                        break;
+                    case 2:
+                        starPic = '../yelp stars/yelp_stars/web_and_ios/regular/regular_2.png';
+                        break;
+                    case 2.5:
+                        starPic = '../yelp stars/yelp_stars/web_and_ios/regular/regular_2_half.png';
+                        break;
+                    case 3:
+                        starPic = '../yelp stars/yelp_stars/web_and_ios/regular/regular_3.png';
+                        break;
+                    case 3.5:
+                        starPic = '../yelp stars/yelp_stars/web_and_ios/regular/regular_3_half.png';
+                        break;
+                    case 4:
+                        starPic = "../yelp stars/yelp_stars/web_and_ios/regular/regular_4.png";
+                        break;
+                    case 4.5:
+                        starPic = '../yelp stars/yelp_stars/web_and_ios/regular/regular_4_half.png';
+                        break;
+                    case 5:
+                        starPic = '../yelp stars/yelp_stars/web_and_ios/regular/regular_5.png';
+                        break;
+                    default:
+                        starPic = '';
+                }
                 list.innerHTML = list.innerHTML +
                 '<li><div class="blog-img"><img src="'+
                 // img address
                 response.businesses[i].image_url
                 +'" alt="blog-img">'+'</div><div class="content-right"><h3>'+
-                //rating
-                response.businesses[i].rating
-                +'</h3></div></li>';
+                // name
+                response.businesses[i].name
+                +'</h3><img src="' +
+                // rating as a picture
+                starPic
+                //response.businesses[i].rating
+                +'"></div></li>';
+                // business id
+                response.businesses[i].id;
+
             }
         }
     });
@@ -499,27 +578,16 @@ function userRemoveClick() {
 
 // total number of businesses in array
 var numBusiness = 0;
-/*$("#listing-area").scroll(function() {
-    var list = $(this);
-    if(list[0].scrollHeight - list.scrollTop() <= list.height()){
-        list = document.getElementById("listing-area");
-        loadLocations(list, 10);
-    }
-});*/
+
 function getBusinessInfo(priceList, count) {
     console.log('called');
     yelpRequest(document.getElementById("name").value, 
                 document.getElementById("price").value,
                 document.getElementById("rating").value,
                 document.getElementById("location").value).then(response => {
-        if (response != undefined){
-            for (i = 0; i < count; i++){
-                /*priceList.innerHTML = priceList.innerHTML +
-                '<li><div '*/
-            }
-        }
     });
-}        
+}
+        
 
 //CUISINE
         //LOCATION
