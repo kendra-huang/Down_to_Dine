@@ -170,15 +170,16 @@ Main Components
 
 .cd-products-columns {
   /* products list wrapper */
-  width: 1200px;
   margin-left: 120px;
+  overflow-y: hidden;
+  overflow-x: scroll;
 }
 .cd-products-columns::after {
   clear: both;
   content: "";
   display: table;
 }
-@media only screen and (min-width: 1170px) {
+@media only screen {
   .cd-products-columns {
     width: 2480px;
     margin-left: 210px;
@@ -188,12 +189,15 @@ Main Components
 .cd-products-columns .product {
   position: relative;
   float: left;
-  width: 150px;
+  width: 310px;
   text-align: center;
+  overflow: hidden;
   -webkit-transition: opacity 0.3s, visibility 0.3s, -webkit-transform 0.3s;
   -moz-transition: opacity 0.3s, visibility 0.3s, -moz-transform 0.3s;
   transition: opacity 0.3s, visibility 0.3s, transform 0.3s;
 }
+
+/*
 .filtering .cd-products-columns .product:not(.selected) {
   opacity: 0;
   visibility: hidden;
@@ -203,19 +207,41 @@ Main Components
   -o-transform: scale(0);
   transform: scale(0);
 }
+*/
+
+/**** NEW CODE *********
+  REMOVED CLASS is appplied
+  to a product when it is not selected AND
+  the filter button is pressed,
+  rather than the element being 
+  removed as soon as it is not selected
+  */
+
+
+.cd-products-columns .removed {
+  width: 0px;
+  opacity: 0;
+  transition-delay: 0.2s;
+  transition: 0.25s all ease;
+}
+
 .no-product-transition .cd-products-columns .product.selected {
   -webkit-transition: opacity 0.3s, visibility 0.3s;
   -moz-transition: opacity 0.3s, visibility 0.3s;
   transition: opacity 0.3s, visibility 0.3s;
 }
+
+/*
 .filtered .cd-products-columns .product:not(.selected) {
   position: absolute;
 }
+
+
 @media only screen and (min-width: 1170px) {
   .cd-products-columns .product {
     width: 310px;
   }
-}
+}*/
 
 .cd-features-list li {
   font-size: 1.4rem;

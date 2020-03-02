@@ -54,10 +54,13 @@ jQuery(document).ready(function($){
         this.resetBtn = this.element.find('.reset');
         this.filtering = false,
         this.selectedproductsNumber = 0;
-        this.filterActive = false;
+        this.filterActive = true;
         this.navigation = this.table.children('.cd-table-navigation');
         // bind table events
         this.bindEvents();
+
+        // new
+        this.filterBtn.addClass('active');
     }
 
     productsTable.prototype.bindEvents = function() {
@@ -72,11 +75,11 @@ jQuery(document).ready(function($){
         //select single product to filter
         self.products.on('click', '.top-info', function(){
             var product = $(this).parents('.product');
-            if( !self.filtering && product.hasClass('selected') ) {
+            if( /* !self.filtering && */ product.hasClass('selected') ) {
                 product.removeClass('selected');
                 self.selectedproductsNumber = self.selectedproductsNumber - 1;
                 self.updateFilterBtn();
-            } else if( !self.filtering && !product.hasClass('selected') ) {
+            } else if( /* !self.filtering && */ !product.hasClass('selected') ) {
                 product.addClass('selected');
                 self.selectedproductsNumber = self.selectedproductsNumber + 1;
                 self.updateFilterBtn();
@@ -86,21 +89,24 @@ jQuery(document).ready(function($){
         self.filterBtn.on('click', function(event){
             event.preventDefault();
             if(self.filterActive) {
-                self.filtering =  true;
+                //self.filtering =  true;
                 self.showSelection();
-                self.filterActive = false;
-                self.filterBtn.removeClass('active');
+                //self.filterActive = false;
+                //self.filterBtn.removeClass('active');
             }
         });
         //reset product selection
         self.resetBtn.on('click', function(event){
             event.preventDefault();
+            /*
             if( self.filtering ) {
                 self.filtering =  false;
                 self.resetSelection();
             } else {
-                self.products.removeClass('selected');
-            }
+                */
+                self.resetSelection();
+                self.products.removeClass('removed selected');
+            //}
             self.selectedproductsNumber = 0;
             self.updateFilterBtn();
         });
@@ -183,8 +189,15 @@ jQuery(document).ready(function($){
     }
 
     productsTable.prototype.showSelection = function() {
-        this.element.addClass('filtering');
-        this.filterProducts();
+        //this.element.addClass('filtering'); 
+        // make all the elements that were not selected dissappear  NEW CODE
+        this.products.each(function(){
+            let product = $(this);
+            if (!product.hasClass('selected')){
+                product.addClass('removed');
+            }
+        });
+        this.filterProducts();  // slides all elements down
     }
 
     productsTable.prototype.resetSelection = function() {
@@ -200,6 +213,8 @@ jQuery(document).ready(function($){
             selectedProducts = this.products.filter('.selected'),
             numberProducts = selectedProducts.length;
 
+        self.tableColumns.css('width', self.productWidth*numberProducts + 'px');
+            /*
         selectedProducts.each(function(index){
             var product = $(this),
                 leftTranslate = containerOffsetLeft + index*self.productWidth + scrollLeft - product.offset().left;
@@ -208,18 +223,20 @@ jQuery(document).ready(function($){
             if(index == numberProducts - 1 ) {
                 product.one('webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend', function(){
                     setTimeout(function(){
-                        self.element.addClass('no-product-transition');
+                        //self.element.addClass('no-product-transition');
                     }, 50);
                     setTimeout(function(){
-                        self.element.addClass('filtered');
+                        //self.element.addClass('filtered');
                         self.productsWrapper.scrollLeft(0);
                         self.tableColumns.css('width', self.productWidth*numberProducts + 'px');
                         selectedProducts.attr('style', '');
                         product.off('webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend');
                         self.updateNavigationVisibility(0);
                     }, 100);
+                    
                 });
             }
+            
         });
 
         if( $('.no-csstransitions').length > 0 ) {
@@ -230,6 +247,7 @@ jQuery(document).ready(function($){
             selectedProducts.attr('style', '');
             self.updateNavigationVisibility(0);
         }
+        */      
     }
 
     productsTable.prototype.resetProductsVisibility = function() {
@@ -276,16 +294,19 @@ jQuery(document).ready(function($){
 
     var windowScrolling = false;
     //detect window scroll - fix product top-info on scrolling
+    /*
     $(window).on('scroll', function(){
         if(!windowScrolling) {
             windowScrolling = true;
             (!window.requestAnimationFrame) ? setTimeout(checkScrolling, 250) : window.requestAnimationFrame(checkScrolling);
         }
     });
+    */
 
     var windowResize = false;
     //detect window resize - reset .cd-products-comparison-table properties
     $(window).on('resize', function(){
+        alert('resize');
         if(!windowResize) {
             windowResize = true;
             (!window.requestAnimationFrame) ? setTimeout(checkResize, 250) : window.requestAnimationFrame(checkResize);
@@ -356,9 +377,7 @@ function search_btn_press() {
     var description = document.getElementById("description").value;
     var location = document.getElementById("location").value;
     console.log('Search Bar Params: ', description, location);
-    yelpRequest(location, description).then(response => {
-        mostRecentSearchOffset = 0;
-    });
+    mostRecentSearchOffset = 0;
     window.location.href = '#listing';
 }
 
