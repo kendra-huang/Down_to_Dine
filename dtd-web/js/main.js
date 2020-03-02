@@ -352,8 +352,11 @@ var mostRecentSearchOffset = 0;
 
 function loadLocations(list, amount) {
     console.log('called');
-    yelpRequest(document.getElementById("location").value,
-                document.getElementById("description").value).then(response => {
+    yelpRequest({
+        location:   document.getElementById("location").value,
+        term:       document.getElementById("description").value,
+        offset:     mostRecentSearchOffset
+    }).then(response => {
         if (response != undefined){
             for (i = 0; i < amount; i++){
                 list.innerHTML = list.innerHTML +
@@ -386,7 +389,14 @@ function search_btn_press() {
     ----------------------------------
     Access the businesses arrays by calling:
 
-    yelpRequest(# parameters based on your needs, put 'undefined' for those u skip #).then(response => {
+    yelpRequest({
+        location: ___ ,
+        term: __ ,
+        latitude: __ ,
+        longitude: __ ,
+        offset: __ ,
+        etc .. 
+    }).then(response => {
         # response is the business array #
         # for Ex: #
         var business = response.businesses[i]   // holds the array for the i'th business
@@ -397,18 +407,9 @@ function search_btn_press() {
 */
 
 // Several api variables listed out for usage or to leave blank
-async function yelpRequest(loc=undefined, term=undefined, off=mostRecentSearchOffset, lat=undefined, lon=undefined) { 
+async function yelpRequest(params) { 
     var yelp_corsanywhere = "https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/";
     var searchType = 'businesses/search?';
-    var params = {
-        offset: off
-    }
-    // Check if each param is enterd and add them to the param list
-    if (loc != undefined)  params.location = loc;
-    if (term != undefined) params.term = term;
-    if (lat != undefined)  params.latitude = lat;
-    if (lon != undefined)  params.longitude = lon;
-
 
     const header = {
         method: 'GET',
@@ -445,7 +446,10 @@ function setLocation() {
         if (navigator.geolocation){
             inputfield.value = "Finding Location...";
             navigator.geolocation.getCurrentPosition(position => {
-                yelpRequest(undefined, undefined, undefined, position.coords.latitude, position.coords.longitude).then(response => {
+                yelpRequest({
+                    latitude:   position.coords.latitude,
+                    longitude:  position.coords.longitude
+                }).then(response => {
                     let first = response.businesses[0];
                     inputfield.value = first.location.city + ', ' + first.location.state;
                 });
