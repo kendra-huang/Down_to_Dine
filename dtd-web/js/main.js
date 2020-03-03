@@ -399,34 +399,34 @@ function loadLocations(list, amount) {
                 var rating = response.businesses[i].rating;
                 switch(rating){
                     case 0: 
-                        starPic = '../yelp stars/yelp_stars/web_and_ios/regular/regular_0.png';
+                        starPic = './yelp stars/yelp_stars/web_and_ios/regular/regular_0.png';
                         break;
                     case 1:
-                        starPic = '../yelp stars/yelp_stars/web_and_ios/regular/regular_1.png';
+                        starPic = './yelp stars/yelp_stars/web_and_ios/regular/regular_1.png';
                         break;
                     case 1.5:
-                        starPic = '../yelp stars/yelp_stars/web_and_ios/regular/regular_1_half.png';
+                        starPic = './yelp stars/yelp_stars/web_and_ios/regular/regular_1_half.png';
                         break;
                     case 2:
-                        starPic = '../yelp stars/yelp_stars/web_and_ios/regular/regular_2.png';
+                        starPic = './yelp stars/yelp_stars/web_and_ios/regular/regular_2.png';
                         break;
                     case 2.5:
-                        starPic = '../yelp stars/yelp_stars/web_and_ios/regular/regular_2_half.png';
+                        starPic = './yelp stars/yelp_stars/web_and_ios/regular/regular_2_half.png';
                         break;
                     case 3:
-                        starPic = '../yelp stars/yelp_stars/web_and_ios/regular/regular_3.png';
+                        starPic = './yelp stars/yelp_stars/web_and_ios/regular/regular_3.png';
                         break;
                     case 3.5:
-                        starPic = '../yelp stars/yelp_stars/web_and_ios/regular/regular_3_half.png';
+                        starPic = './yelp stars/yelp_stars/web_and_ios/regular/regular_3_half.png';
                         break;
                     case 4:
-                        starPic = "../yelp stars/yelp_stars/web_and_ios/regular/regular_4.png";
+                        starPic = "./yelp stars/yelp_stars/web_and_ios/regular/regular_4.png";
                         break;
                     case 4.5:
-                        starPic = '../yelp stars/yelp_stars/web_and_ios/regular/regular_4_half.png';
+                        starPic = './yelp stars/yelp_stars/web_and_ios/regular/regular_4_half.png';
                         break;
                     case 5:
-                        starPic = '../yelp stars/yelp_stars/web_and_ios/regular/regular_5.png';
+                        starPic = './yelp stars/yelp_stars/web_and_ios/regular/regular_5.png';
                         break;
                     default:
                         starPic = '';
@@ -442,10 +442,14 @@ function loadLocations(list, amount) {
                 // rating as a picture
                 starPic
                 //response.businesses[i].rating
-                +'"></div></li>';
+                +'">'
+                + '<div id="outer">' + 
+                '<div class="inner"><button onclick="userAddClick()">Add</button></div>' +
+                '<div class="inner"><button onclick="userRemoveClick()">Remove</button></div>' +
+                ' </div>' +
                 // business id
-                response.businesses[i].id;
-
+                response.businesses[i].id +
+                '</div></li>';
             }
         }
     });
