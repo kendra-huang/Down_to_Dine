@@ -394,6 +394,8 @@ jQuery(document).ready(function($){
 
 // Stores the most recent yelp API search
 var mostRecentSearchOffset = 0;
+var abutton = document.createElement('BUTTON');
+var rbutton = document.createElement('BUTTON');
 
 function loadLocations(list, amount) {
     console.log('loadLocations() called');
@@ -478,14 +480,27 @@ function loadLocations(list, amount) {
                 // rating as a picture
                 starPic
                 //response.businesses[i].rating
-                +'">'
-                + '<div id="outer">' + 
-                '<div class="inner"><button onclick="userAddClick()">Add</button></div>' +
-                '<div class="inner"><button onclick="userRemoveClick()">Remove</button></div>' +
-                ' </div>' +
+                // Add/Remove Button Toggle
+                +'"><button type="button" id=\'i\' value = ' +
                 // business id
                 response.businesses[i].id +
+                +'>Add</button>' +
+                
                 '</div></li>';
+
+                $("button").click(function(){
+                    $(this).text($(this).text() == 'Add' ? 'Remove' : 'Add');
+                });
+                
+                if ($(this).text == 'Remove'){
+                    var businessObj = response.businesses[i];
+                    var businessArr = [];
+                    businessArr.push(businessObj);
+                    console.log('add to business array', businessArr);
+                }
+                else {
+                    //document.getElementById(0)
+                }
             }
         }
     });
@@ -606,27 +621,33 @@ function setLocation() {
     }
 }
 
+var clicked = false;
+
 // number of times user adds restaurant
 var count = 0;
-function userAddClick() {      
-    //document.getElementById("result").innerHTML = "Restaurant added ";
-    count++;
+
+const button = document.querySelector('input');
+// const paragraph = document.querySelector('p');
+if (button){
+    button.addEventListener("click", updateButton);
+    console.log("button clicked");
 }
 
-function userRemoveClick() {
-    //document.getElementById("remove").innerHTML = "Restaurant removed ";
-    count--;
-}
+function updateButton() {
+        if (button.value === 'Add') {
+        button.value = 'Remove';
+        clicked = true;
+        count++;
+        console.log("update button");
+        //paragraph.textContent = 'The machine has started!';
+        } else {
+        button.value = 'Add';
+        clicked = false;
+        count--;
+        //paragraph.textContent = 'The machine is stopped.';
+    }
+};
 
-/*function search_btn_press() {
-    var description = document.getElementById("description").value;
-    var location = document.getElementById("location").value;
-    console.log('Search Bar Params: ', description, location);
-    yelpRequest(location, description).then(response => {
-        mostRecentSearchOffset = 0;
-    });
-    window.location.href = '#listing';
-}*/
 
 // total number of businesses in array
 var numBusiness = 0;
