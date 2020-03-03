@@ -678,7 +678,7 @@ nav .block .navbar-default .navbar-nav > .active > a:hover:before {
   transform: 1s;
 }
 #listing .block ul li:hover img {
-  transform: scale(1.2) rotate(10deg);
+  /*transform: scale(1.2) rotate(10deg);*/
 }
 #listing .block ul li h3 {
   color: #323232;

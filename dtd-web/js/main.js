@@ -58,10 +58,11 @@ jQuery(document).ready(function($){
         return false;
     };
 
-    /*$("#price").getBusinessInfo(function() {
-        //var priceList = $(this);
-        
-    });*/
+    // Set a click handler for anything with a data-confirmation attribute. 
+    $('[adding-restaurant]').click(function() { 
+        var message = $(this).data('added'); 
+        return confirm(message); 
+    });
 
 //Initiate WOW JS
     new WOW().init();
@@ -396,6 +397,7 @@ function loadLocations(list, amount) {
         if (response != undefined){
             var starPic = '';
             for (i = 0; i < amount; i++){
+                var redirectToYelp = response.businesses[i].url;
                 var rating = response.businesses[i].rating;
                 switch(rating){
                     case 0: 
@@ -431,25 +433,54 @@ function loadLocations(list, amount) {
                     default:
                         starPic = '';
                 }
+                
+
                 list.innerHTML = list.innerHTML +
-                '<li><div class="blog-img"><img src="'+
+                '<li><div class="blog-img"><a href="' +
+                redirectToYelp
+                + '"target="_blank"><img src="' +
+                //'<img src="'+
                 // img address
                 response.businesses[i].image_url
-                +'" alt="blog-img">'+'</div><div class="content-right"><h3>'+
+                +'" alt="blog-img"></a>'+'</div><div class="content-right"><h3>'+
                 // name
                 response.businesses[i].name
                 +'</h3><img src="' +
-                // rating as a picture
+                // rating as a picture 
                 starPic
+                //+ '"></a><div>'
                 //response.businesses[i].rating
-                +'">'
-                + '<div id="outer">' + 
-                '<div class="inner"><button onclick="userAddClick()">Add</button></div>' +
-                '<div class="inner"><button onclick="userRemoveClick()">Remove</button></div>' +
-                ' </div>' +
+                +'"><div>'
+                + response.businesses[i].review_count
+                + ' Reviews</div>'
+                + '<div>'
+                + response.businesses[i].price
+                + '</div>'
+                + '<div id="outer">'
+                //<button onclick="return confirm('Delete this object?');">Delete</button>
+                + '<div class="inner"><button onclick="userAddClick()">Add</button></div>'
+                + '<div class="inner"><button onclick="userRemoveClick()">Remove</button></div>'
+                //+ ' </div>' +
                 // business id
-                response.businesses[i].id +
-                '</div></li>';
+                //response.businesses[i].id +
+                //+ '</div></li>';
+                + '</li>';
+                
+                //if (userAddClick().click == true)
+                /*if (confirm(message) != null)
+                {
+                    // create variable of json object to add to data array
+                    var b = response;
+                    var data = [];
+                    data.push(b);
+                    
+                    // create array of business IDs
+                    var bID = businessID;
+                    var bIDArr = [];
+                    bIDArr.push(bID);
+                    console.log(data);
+
+                }*/
             }
         }
     });
@@ -560,25 +591,18 @@ function setLocation() {
 
 // number of times user adds restaurant
 var count = 0;
+var click = false;
 function userAddClick() {      
     //document.getElementById("result").innerHTML = "Restaurant added ";
     count++;
+    click = true;
 }
 
 function userRemoveClick() {
     //document.getElementById("remove").innerHTML = "Restaurant removed ";
     count--;
+    click = false;
 }
-
-/*function search_btn_press() {
-    var description = document.getElementById("description").value;
-    var location = document.getElementById("location").value;
-    console.log('Search Bar Params: ', description, location);
-    yelpRequest(location, description).then(response => {
-        mostRecentSearchOffset = 0;
-    });
-    window.location.href = '#listing';
-}*/
 
 // total number of businesses in array
 var numBusiness = 0;
@@ -593,7 +617,7 @@ function getBusinessInfo(priceList, count) {
 }
         
 
-//CUISINE
+        //CUISINE
         //LOCATION
 function loadBusinessInfo(list, amount) {
     console.log('called');
