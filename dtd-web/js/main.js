@@ -15,13 +15,24 @@ jQuery(document).ready(function($){
     });
 
     $("#listing-area").scroll(function() {
-        var list = $(this);
+        let list = $(this);
         if(list[0].scrollHeight - list.scrollTop() <= list.height()){
             list = document.getElementById("listing-area");
             loadLocations(list, 10);
         }
     });
     
+    $("#refresh").click(function() {
+        let list = document.getElementById("listing-area");
+        list.innerHTML =    "<li LoadingTag><h1 class=\"heading\"><span>Loading</span></h1></li>" + 
+                            "<li><h1 class=\"heading\"><span> . . . </span></h1></li>";
+        mostRecentSearchOffset = 0;
+        loadLocations(list, 10);    
+    });
+
+
+
+
     var objArray = [];
     $('.imgbtn').click(function () {
         console.log('called');
@@ -342,7 +353,6 @@ jQuery(document).ready(function($){
     var windowResize = false;
     //detect window resize - reset .cd-products-comparison-table properties
     $(window).on('resize', function(){
-        alert('resize');
         if(!windowResize) {
             windowResize = true;
             (!window.requestAnimationFrame) ? setTimeout(checkResize, 250) : window.requestAnimationFrame(checkResize);
@@ -370,7 +380,6 @@ jQuery(document).ready(function($){
         //check if mobile or desktop device
         return window.getComputedStyle(comparisonTables[0].element.get(0), '::after').getPropertyValue('content').replace(/'/g, "").replace(/"/g, "");
     }
-
     function setTranformX(element, value) {
         element.css({
             '-moz-transform': 'translateX(' + value + 'px)',
@@ -387,13 +396,40 @@ jQuery(document).ready(function($){
 var mostRecentSearchOffset = 0;
 
 function loadLocations(list, amount) {
-    console.log('called');
-    yelpRequest({
-        location:   document.getElementById("location").value,
-        term:       document.getElementById("description").value,
-        offset:     mostRecentSearchOffset
-    }).then(response => {
+    console.log('loadLocations() called');
+    params = {
+        location:   location.value,
+        term:       "restaurant "+description.value,
+        offset:     mostRecentSearchOffset,
+        limit:      amount
+    }
+    for (let i = 1; i <= 4; i++){
+        if (document.getElementById("cb"+i).checked){
+            console.log(params.price);
+            if(params.price == undefined){
+                params.price = i;
+            }else{
+                params.price = params.price+", "+i;
+            }
+        }
+    }
+    for (let i = 1; i <= 5; i++){
+        let choice = document.getElementById("rb"+i);
+        if (choice.checked){
+            params.range = 1609*choice.value;
+        }
+    }
+    for (let i = 7; i <= 8; i++){
+        let choice = document.getElementById("rb"+i);
+        if (choice.checked){
+            params.sort_by = choice.value;
+        }
+    }
+    yelpRequest(params).then(response => {
         if (response != undefined){
+            if (list.innerHTML[4] == 'l'){
+                list.innerHTML = "";
+            }
             var starPic = '';
             for (i = 0; i < amount; i++){
                 var rating = response.businesses[i].rating;
@@ -459,10 +495,14 @@ function loadLocations(list, amount) {
 // Yelp api Function calls
 const apiKey = 'EjKBKGiEKnrhbi-wjpdU-5Ch3Xs8QbL3dKnz3efiJKLLND6qSPoTAH469ah0TQ5C67qQKiLZDo7HNZas-JCEbb0Tz70D-t2pA6SdxgcAUwz2JdwMOZm7LGG7e3RQXnYx';
 
+
+// Top Search Bar Entries
+var description = document.getElementById("description"),
+    location    = document.getElementById("location");
+//////////////////////
+
 function search_btn_press() {
-    var description = document.getElementById("description").value;
-    var location = document.getElementById("location").value;
-    console.log('Search Bar Params: ', description, location);
+    console.log('Search Bar Params: ', description.value, location.value);
     mostRecentSearchOffset = 0;
     window.location.href = '#listing';
 }
@@ -491,20 +531,21 @@ function search_btn_press() {
 
 // Several api variables listed out for usage or to leave blank
 async function yelpRequest(params) { 
-    var yelp_corsanywhere = "https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/";
-    var searchType = 'businesses/search?';
-
+    let yelp_corsanywhere = "https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/";
+    let searchType = 'businesses/search?'; 
     const header = {
         method: 'GET',
         headers: new Headers({
             "Authorization": "Bearer "+apiKey
         })
     }
+    let queryString = yelp_corsanywhere + searchType + $.param(params);
+    console.log("queryString = ", queryString);
     var response;
     try {
         // turn params into a queuestring and fetch 
         response = await fetch(
-            yelp_corsanywhere + searchType + $.param(params),
+            queryString,
             header
         )
         try {
@@ -524,17 +565,24 @@ async function yelpRequest(params) {
 // Sets the City and State of the user into the location bar whenever
 // they choose the "Your Location" option
 function setLocation() {
-    var inputfield = document.getElementById("location");
-    if (inputfield.value == "Your Location") {
+    if (location.value == "Your Location") {
         if (navigator.geolocation){
-            inputfield.value = "Finding Location...";
+            location.value = "Finding Location...";
             navigator.geolocation.getCurrentPosition(position => {
                 yelpRequest({
                     latitude:   position.coords.latitude,
-                    longitude:  position.coords.longitude
+                    longitude:  position.coords.longitude,
+                    limit: 1
                 }).then(response => {
-                    let first = response.businesses[0];
-                    inputfield.value = first.location.city + ', ' + first.location.state;
+                    if (response != undefined){
+                        let first = response.businesses[0];
+                        location.value = first.location.city + ', ' + first.location.state;                        
+                    }else{
+                        location.value = "Location could not be Found."
+                        setTimeout(function() {
+                            location.value = "";
+                        }, 250);
+                    }
                 });
             },error => {
                 switch(error.code) {    

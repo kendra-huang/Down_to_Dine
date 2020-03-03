@@ -191,7 +191,7 @@ Main Components
   float: left;
   width: 310px;
   text-align: center;
-  overflow: hidden;
+  overflow:   ;
   -webkit-transition: opacity 0.3s, visibility 0.3s, -webkit-transform 0.3s;
   -moz-transition: opacity 0.3s, visibility 0.3s, -moz-transform 0.3s;
   transition: opacity 0.3s, visibility 0.3s, transform 0.3s;
