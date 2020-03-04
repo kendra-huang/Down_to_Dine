@@ -310,7 +310,7 @@ jQuery(document).ready(function($){
         this.productsWrapper.animate( {scrollLeft: scrollLeft}, 200 );
     }
 
-    var comparisonTables = [];
+    comparisonTables = [];
     $('.cd-products-comparison-table').each(function(){
         //create a productsTable object for each .cd-products-comparison-table
         comparisonTables.push(new productsTable($(this)));
@@ -408,76 +408,61 @@ function loadLocations(list, amount) {
             if (list.innerHTML[4] == 'l'){
                 list.innerHTML = "";
             }
-            var starPic = '';
+            var starPicURL = '';
             for (i = 0; i < amount; i++){
-                var redirectToYelp = response.businesses[i].url;
+                var redirectToYelpURL = response.businesses[i].url;
                 let businessID = response.businesses[i].id;
                 let businessObj = response.businesses[i];
                 businessArr[businessID] = businessObj;
                 var rating = response.businesses[i].rating;
                 switch(rating){
                     case 0: 
-                        starPic = './yelp stars/yelp_stars/web_and_ios/regular/regular_0.png';
+                        starPicURL = './yelp stars/yelp_stars/web_and_ios/regular/regular_0.png';
                         break;
                     case 1:
-                        starPic = './yelp stars/yelp_stars/web_and_ios/regular/regular_1.png';
+                        starPicURL = './yelp stars/yelp_stars/web_and_ios/regular/regular_1.png';
                         break;
                     case 1.5:
-                        starPic = './yelp stars/yelp_stars/web_and_ios/regular/regular_1_half.png';
+                        starPicURL = './yelp stars/yelp_stars/web_and_ios/regular/regular_1_half.png';
                         break;
                     case 2:
-                        starPic = './yelp stars/yelp_stars/web_and_ios/regular/regular_2.png';
+                        starPicURL = './yelp stars/yelp_stars/web_and_ios/regular/regular_2.png';
                         break;
                     case 2.5:
-                        starPic = './yelp stars/yelp_stars/web_and_ios/regular/regular_2_half.png';
+                        starPicURL = './yelp stars/yelp_stars/web_and_ios/regular/regular_2_half.png';
                         break;
                     case 3:
-                        starPic = './yelp stars/yelp_stars/web_and_ios/regular/regular_3.png';
+                        starPicURL = './yelp stars/yelp_stars/web_and_ios/regular/regular_3.png';
                         break;
                     case 3.5:
-                        starPic = './yelp stars/yelp_stars/web_and_ios/regular/regular_3_half.png';
+                        starPicURL = './yelp stars/yelp_stars/web_and_ios/regular/regular_3_half.png';
                         break;
                     case 4:
-                        starPic = "./yelp stars/yelp_stars/web_and_ios/regular/regular_4.png";
+                        starPicURL = "./yelp stars/yelp_stars/web_and_ios/regular/regular_4.png";
                         break;
                     case 4.5:
-                        starPic = './yelp stars/yelp_stars/web_and_ios/regular/regular_4_half.png';
+                        starPicURL = './yelp stars/yelp_stars/web_and_ios/regular/regular_4_half.png';
                         break;
                     case 5:
-                        starPic = './yelp stars/yelp_stars/web_and_ios/regular/regular_5.png';
+                        starPicURL = './yelp stars/yelp_stars/web_and_ios/regular/regular_5.png';
                         break;
                     default:
-                        starPic = '';
+                        starPicURL = '';
                 }
                 
-
-                list.innerHTML = list.innerHTML +
-                '<li><div class="blog-img"><a href="' +
-                redirectToYelp
-                + '"target="_blank"><img src="' +
-                //'<img src="'+
-                // img address
-                response.businesses[i].image_url
-                +'" alt="blog-img"></a>'+'</div><div class="content-right"><h3>'+
-                // name
-                response.businesses[i].name
-                +'</h3><img src="' +
-                // rating as a picture 
-                starPic
-                //+ '"></a><div>'
-                //response.businesses[i].rating
-                +'"><div>'
-                + response.businesses[i].review_count
-                + ' Reviews</div>'
-                + '<div>'
-                + response.businesses[i].price
-                + '</div>'
-                // Add/Remove Button Toggle
-                +'<button onclick="btnUpdate(this.value)" value = ' +
-                // business id
-                response.businesses[i].id +
-                +'>Add</button>' +
-                '</div></li>';
+                list.innerHTML +=
+                '<li>'+
+                    '<div class="blog-img">' +
+                        '<a href="' + redirectToYelpURL + '"target="_blank">' + '<img src="' + response.businesses[i].image_url +'" alt="blog-img">' + '</a>' +
+                    '</div>' +
+                    '<div class="content-right">' +
+                        '<h3>' + response.businesses[i].name + '</h3>' +
+                        '<img src="' + starPicURL +'">' +
+                    '<div>' + response.businesses[i].review_count + ' Reviews</div>' +
+                    '<div>' + response.businesses[i].price + '</div>' +
+                    // Add/Remove Button Toggle
+                    '<button onclick="btnUpdate(this.value)" value="' + response.businesses[i].id + '">Add</button>' +
+                '</li>';
             }
         }
     });
@@ -486,7 +471,7 @@ function loadLocations(list, amount) {
 
 function btnUpdate(businessID){
     let btn = $(this);
-    let businessObj = businessArr[businessID];
+    var businessObj = businessArr[businessID];
     if (btn.text == 'Add'){
         
         comparisonTables.push(businessObj);
@@ -510,6 +495,11 @@ const apiKey = 'EjKBKGiEKnrhbi-wjpdU-5Ch3Xs8QbL3dKnz3efiJKLLND6qSPoTAH469ah0TQ5C
 function search_btn_press() {
     console.log('Search Bar Params: ', _description.value, _location.value);
     mostRecentSearchOffset = 0;
+    let list = document.getElementById("listing-area");
+    list.innerHTML =    "<li LoadingTag><h1 class=\"heading\"><span>Loading</span></h1></li>" + 
+                        "<li><h1 class=\"heading\"><span> . . . </span></h1></li>";
+    mostRecentSearchOffset = 0;
+    loadLocations(list, 10); 
     window.location.href = '#listing';
 }
 
