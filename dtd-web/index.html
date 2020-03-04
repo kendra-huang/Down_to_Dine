@@ -247,65 +247,47 @@
                             <ul class="group">
                                 <h2>Location</h2>
                                 <li>
-                                    <input type="checkbox" name="rb" id="cb5" />
-                                    <label for="cb5">0 - 5 miles</label>
+                                    <input type="radio" name="dist" id="rb1" value=".5" />
+                                    <label for="rb1">within 1/2 mile</label>
                                 </li>
                                 <li>
-                                    <input type="checkbox" name="rb" id="cb6" />
-                                    <label for="cb6">5 - 10 miles</label>
+                                    <input type="radio" name="dist" id="rb2" value="1"/>
+                                    <label for="rb2">within 1 mile</label>
                                 </li>
                                 <li>
-                                    <input type="checkbox" name="rb" id="cb7" />
-                                    <label for="cb7">10 - 15 miles</label>
+                                    <input type="radio" name="dist" id="rb3" value="5" checked="checked"/>
+                                    <label for="rb3">within 5 miles</label>
                                 </li>
                                 <li>
-                                    <input type="checkbox" name="rb" id="cb8" />
-                                    <label for="cb8">15 - 20 miles</label>   
+                                    <input type="radio" name="dist" id="rb4" value="10"/>
+                                    <label for="rb4">within 10 miles</label>   
                                 </li>
                                 <li>
-                                    <input type="checkbox" name="rb" id="cb9" />
-                                    <label for="cb9">25+ miles</label>   
-                                </li>                           
-                            </ul>
-                            <ul class="group">
-                                <h2>Star Rating</h2>
-                                <li>
-                                    <input type="checkbox" name="rb" id="cb10" />
-                                    <label for="cb10">1 star</label>
-                                </li>
-                                <li>
-                                    <input type="checkbox" name="rb" id="cb11" />
-                                    <label for="cb11">2 stars</label>
-                                </li>
-                                <li>
-                                    <input type="checkbox" name="rb" id="cb12" />
-                                    <label for="cb12">3 stars</label>
-                                </li>
-                                <li>
-                                    <input type="checkbox" name="rb" id="cb13" />
-                                    <label for="cb13">4 stars</label>   
-                                </li>
-                                <li>
-                                    <input type="checkbox" name="rb" id="cb14" />
-                                    <label for="cb14">5 stars</label>   
+                                    <input type="radio" name="dist" id="rb5" value="25"/>
+                                    <label for="rb5">within 25 miles</label>   
                                 </li>                           
                             </ul>
                             <ul class="group">
                                 <h2>Sort By</h2>
                                 <li>
-                                    <input type="radio" name="rb" id="rb1" />
-                                    <label for="rb1">Recommended</label>
+                                    <input type="radio" name="rb" id="rb6" value="best_match" checked="checked"/>
+                                    <label for="rb6">Recommended</label>
                                 </li>
                                 <li>
-                                    <input type="radio" name="rb" id="rb2" />
-                                    <label for="rb2">Highest Rated</label>
+                                    <input type="radio" name="rb" id="rb7" value="rating" />
+                                    <label for="rb7">Highest Rated</label>
                                 </li>
                                 <li>
-                                    <input type="radio" name="rb" id="rb3" />
-                                    <label for="rb3">Most Reviewed</label>
+                                    <input type="radio" name="rb" id="rb8" value="review_count" />
+                                    <label for="rb8">Most Reviewed</label>
                                 </li>                     
-                            </ul>  
-                        </div>                     
+                            </ul>
+                            <div class="group" style="margin-left: auto; vertical-align: middle;">
+                                <button id="refresh">Refresh</button>
+                            </div>
+                            
+                        </div>
+                        
 
                         <ul id ="listing-area">
                             <li>

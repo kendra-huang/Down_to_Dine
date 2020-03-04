@@ -15,39 +15,22 @@ jQuery(document).ready(function($){
     });
 
     $("#listing-area").scroll(function() {
-        var list = $(this);
+        let list = $(this);
         if(list[0].scrollHeight - list.scrollTop() <= list.height()){
             list = document.getElementById("listing-area");
             loadLocations(list, 10);
         }
     });
     
-    var objArray = [];
-    $('.imgbtn').click(function () {
-        console.log('called');
-        var name = document.getElementById("name").value;
-        var price = document.getElementById("price").value;
-        var rating = document.getElementById("rating").value;
-        var businessLoc = document.getElementById("location").value;
-        var businessID = document.getElementById("business").value;
-        yelpRequest(name, price, rating, businessLoc).then(response => {
-        });
-
-        var title = $(this).parent().parent().find('span').html();
-        if (!alreadyAdded(title)) {
-            var image = $(this).parent().parent().find('img').prop('src');
-            var newLength = objArray.push({
-                id: objArray.length + 1,
-                title: title,
-                image: image,
-                description: 'Example'
-            });
-            $('#lblCart').html(newLength);
-        }
-        else {
-            alert("Already added");
-        }
+    $("#refresh").click(function() {
+        let list = document.getElementById("listing-area");
+        list.innerHTML =    "<li LoadingTag><h1 class=\"heading\"><span>Loading</span></h1></li>" + 
+                            "<li><h1 class=\"heading\"><span> . . . </span></h1></li>";
+        mostRecentSearchOffset = 0;
+        loadLocations(list, 10);    
     });
+
+
 
     function alreadyAdded(itemTitle) {
         for (var i = 0; i < objArray.length; i++) {
@@ -343,7 +326,6 @@ jQuery(document).ready(function($){
     var windowResize = false;
     //detect window resize - reset .cd-products-comparison-table properties
     $(window).on('resize', function(){
-        alert('resize');
         if(!windowResize) {
             windowResize = true;
             (!window.requestAnimationFrame) ? setTimeout(checkResize, 250) : window.requestAnimationFrame(checkResize);
@@ -371,7 +353,6 @@ jQuery(document).ready(function($){
         //check if mobile or desktop device
         return window.getComputedStyle(comparisonTables[0].element.get(0), '::after').getPropertyValue('content').replace(/'/g, "").replace(/"/g, "");
     }
-
     function setTranformX(element, value) {
         element.css({
             '-moz-transform': 'translateX(' + value + 'px)',
@@ -384,20 +365,55 @@ jQuery(document).ready(function($){
 
 });
 
+// Top Search Bar Entries
+var description = document.getElementById("description"),
+var location    = document.getElementById("location");
+//////////////////////
+
 // Stores the most recent yelp API search
 var mostRecentSearchOffset = 0;
-
+var businessArr = {};
 function loadLocations(list, amount) {
-    console.log('called');
-    yelpRequest({
-        location:   document.getElementById("location").value,
-        term:       document.getElementById("description").value,
-        offset:     mostRecentSearchOffset
-    }).then(response => {
+    console.log('loadLocations() called');
+    params = {
+        location:   location.value,
+        term:       "restaurant "+description.value,
+        offset:     mostRecentSearchOffset,
+        limit:      amount
+    }
+    for (let i = 1; i <= 4; i++){
+        if (document.getElementById("cb"+i).checked){
+            console.log(params.price);
+            if(params.price == undefined){
+                params.price = i;
+            }else{
+                params.price = params.price+", "+i;
+            }
+        }
+    }
+    for (let i = 1; i <= 5; i++){
+        let choice = document.getElementById("rb"+i);
+        if (choice.checked){
+            params.range = 1609*choice.value;
+        }
+    }
+    for (let i = 7; i <= 8; i++){
+        let choice = document.getElementById("rb"+i);
+        if (choice.checked){
+            params.sort_by = choice.value;
+        }
+    }
+    yelpRequest(params).then(response => {
         if (response != undefined){
+            if (list.innerHTML[4] == 'l'){
+                list.innerHTML = "";
+            }
             var starPic = '';
             for (i = 0; i < amount; i++){
                 var redirectToYelp = response.businesses[i].url;
+                let businessID = response.businesses[i].id;
+                let businessObj = response.businesses[i];
+                businessArr[businessID] = businessObj;
                 var rating = response.businesses[i].rating;
                 switch(rating){
                     case 0: 
@@ -456,44 +472,43 @@ function loadLocations(list, amount) {
                 + '<div>'
                 + response.businesses[i].price
                 + '</div>'
-                + '<div id="outer">'
-                //<button onclick="return confirm('Delete this object?');">Delete</button>
-                + '<div class="inner"><button onclick="userAddClick()">Add</button></div>'
-                + '<div class="inner"><button onclick="userRemoveClick()">Remove</button></div>'
-                //+ ' </div>' +
+                // Add/Remove Button Toggle
+                +'<button onclick="btnUpdate(this.value)" value = ' +
                 // business id
-                //response.businesses[i].id +
-                //+ '</div></li>';
-                + '</li>';
-                
-                //if (userAddClick().click == true)
-                /*if (confirm(message) != null)
-                {
-                    // create variable of json object to add to data array
-                    var b = response;
-                    var data = [];
-                    data.push(b);
-                    
-                    // create array of business IDs
-                    var bID = businessID;
-                    var bIDArr = [];
-                    bIDArr.push(bID);
-                    console.log(data);
-
-                }*/
+                response.businesses[i].id +
+                +'>Add</button>' +
+                '</div></li>';
             }
         }
     });
     mostRecentSearchOffset += amount;
 }
 
+function btnUpdate(businessID){
+    let btn = $(this);
+    let businessObj = businessArr[businessID];
+    if (btn.text == 'Add'){
+        
+        comparisonTables.push(businessObj);
+        console.log('add to business array', businessObj);
+    }
+    else {
+        for (let j = 0; j < comparisonTables.length; j++){
+            if (businessObj == comparisonTables[j]){
+                { businessArr.splice(j, 1); j--; } 
+            }
+        }
+        console.log('removed business from array', businessObj);
+        //document.getElementById(0)
+    }
+    btn.text(btn.text() == 'Add' ? 'Remove' : 'Add');
+}
+
 // Yelp api Function calls
 const apiKey = 'EjKBKGiEKnrhbi-wjpdU-5Ch3Xs8QbL3dKnz3efiJKLLND6qSPoTAH469ah0TQ5C67qQKiLZDo7HNZas-JCEbb0Tz70D-t2pA6SdxgcAUwz2JdwMOZm7LGG7e3RQXnYx';
 
 function search_btn_press() {
-    var description = document.getElementById("description").value;
-    var location = document.getElementById("location").value;
-    console.log('Search Bar Params: ', description, location);
+    console.log('Search Bar Params: ', description.value, location.value);
     mostRecentSearchOffset = 0;
     window.location.href = '#listing';
 }
@@ -522,20 +537,21 @@ function search_btn_press() {
 
 // Several api variables listed out for usage or to leave blank
 async function yelpRequest(params) { 
-    var yelp_corsanywhere = "https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/";
-    var searchType = 'businesses/search?';
-
+    let yelp_corsanywhere = "https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/";
+    let searchType = 'businesses/search?'; 
     const header = {
         method: 'GET',
         headers: new Headers({
             "Authorization": "Bearer "+apiKey
         })
     }
+    //let queryString = yelp_corsanywhere + searchType + $.param(params);
+    //console.log("queryString = ", queryString);
     var response;
     try {
         // turn params into a queuestring and fetch 
         response = await fetch(
-            yelp_corsanywhere + searchType + $.param(params),
+            queryString,
             header
         )
         try {
@@ -555,17 +571,24 @@ async function yelpRequest(params) {
 // Sets the City and State of the user into the location bar whenever
 // they choose the "Your Location" option
 function setLocation() {
-    var inputfield = document.getElementById("location");
-    if (inputfield.value == "Your Location") {
+    if (location.value == "Your Location") {
         if (navigator.geolocation){
-            inputfield.value = "Finding Location...";
+            location.value = "Finding Location...";
             navigator.geolocation.getCurrentPosition(position => {
                 yelpRequest({
                     latitude:   position.coords.latitude,
-                    longitude:  position.coords.longitude
+                    longitude:  position.coords.longitude,
+                    limit: 1
                 }).then(response => {
-                    let first = response.businesses[0];
-                    inputfield.value = first.location.city + ', ' + first.location.state;
+                    if (response != undefined){
+                        let first = response.businesses[0];
+                        location.value = first.location.city + ', ' + first.location.state;                        
+                    }else{
+                        location.value = "Location could not be Found."
+                        setTimeout(function() {
+                            location.value = "";
+                        }, 250);
+                    }
                 });
             },error => {
                 switch(error.code) {    
@@ -589,20 +612,33 @@ function setLocation() {
     }
 }
 
+var clicked = false;
+
 // number of times user adds restaurant
 var count = 0;
-var click = false;
-function userAddClick() {      
-    //document.getElementById("result").innerHTML = "Restaurant added ";
-    count++;
-    click = true;
+
+const button = document.querySelector('input');
+const paragraph = document.querySelector('p');
+if (button){
+    button.addEventListener("click", updateButton);
+    console.log("button clicked");
 }
 
-function userRemoveClick() {
-    //document.getElementById("remove").innerHTML = "Restaurant removed ";
-    count--;
-    click = false;
-}
+function updateButton() {
+        if (button.value === 'Add') {
+        button.value = 'Remove';
+        clicked = true;
+        count++;
+        console.log("update button");
+        //paragraph.textContent = 'The machine has started!';
+        } else {
+        button.value = 'Add';
+        clicked = false;
+        count--;
+        //paragraph.textContent = 'The machine is stopped.';
+    }
+};
+
 
 // total number of businesses in array
 var numBusiness = 0;
