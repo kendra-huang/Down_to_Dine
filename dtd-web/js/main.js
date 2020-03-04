@@ -1,6 +1,5 @@
 
 jQuery(document).ready(function($){
-
     // Top Search Bar Entries
     _description = document.getElementById("description");
     _location = document.getElementById("location");
@@ -26,15 +25,7 @@ jQuery(document).ready(function($){
         }
     });
     
-    $("#refresh").click(function() {
-        let list = document.getElementById("listing-area");
-        list.innerHTML =    "<li LoadingTag><h1 class=\"heading\"><span>Loading</span></h1></li>" + 
-                            "<li><h1 class=\"heading\"><span> . . . </span></h1></li>";
-        mostRecentSearchOffset = 0;
-        loadLocations(list, 10);    
-    });
-
-
+    $("#refresh").click(refreshList);
 
     function alreadyAdded(itemTitle) {
         for (var i = 0; i < objArray.length; i++) {
@@ -85,8 +76,70 @@ jQuery(document).ready(function($){
 
         // new
         this.filterBtn.addClass('active');
+        this.tableColumns.css('width', this.productWidth*this.productsNumber + 'px');
     }
 
+    productsTable.prototype.tableAddNew = function(business) {
+        let newElement = 
+        '<li class="product">'+
+            '<div class="top-info">'+
+                '<div class="check"></div>'+
+                '<img src="img/product.png" alt="product image">'+
+                '<h3>Sumsung Series 6 J6300</h3>'+
+            '</div>'+
+            // .top-info ^
+            '<ul class="cd-features-list">'+
+                '<li>$600</li>'+
+                '<li class="rate"><span>5/5</span></li>'+
+                '<li>1080p</li>'+
+                '<li>LED</li>'+
+                '<li>47.6 inches</li>'+
+                '<!-- <li>800Hz</li>'+
+                '<li>2015</li>'+
+                '<li>mpeg4</li>'+
+                '<li>1 Side</li>'+
+                '<li>3 Port</li>'+
+                '<li>1 Rear</li>'+
+            '</ul>'+
+        '</li>';
+        self.products.append(newElement);
+        self.productsTopInfo = self.table.find('.top-info');
+        self.productsNumber += 1;
+        this.tableColumns.css('width', this.productWidth*this.productsNumber + 'px');
+    }
+    
+    
+    comparisonArr = [];
+    productsTable.prototype.tableRemove = function() {
+        let newElement = 
+        '<li class="product">'+
+            '<div class="top-info">'+
+                '<div class="check"></div>'+
+                '<img src="img/product.png" alt="product image">'+
+                '<h3>Sumsung Series 6 J6300</h3>'+
+            '</div>'+
+            // .top-info ^
+            '<ul class="cd-features-list">'+
+                '<li>$600</li>'+
+                '<li class="rate"><span>5/5</span></li>'+
+                '<li>1080p</li>'+
+                '<li>LED</li>'+
+                '<li>47.6 inches</li>'+
+                '<!-- <li>800Hz</li>'+
+                '<li>2015</li>'+
+                '<li>mpeg4</li>'+
+                '<li>1 Side</li>'+
+                '<li>3 Port</li>'+
+                '<li>1 Rear</li>'+
+            '</ul>'+
+        '</li>';
+        self.products.append(newElement);
+        self.productsTopInfo = self.table.find('.top-info');
+        self.productsNumber += 1;
+        this.tableColumns.css('width', this.productWidth*this.productsNumber + 'px');
+    }
+
+    
     productsTable.prototype.bindEvents = function() {
         var self = this;
         //detect scroll left inside producst table
@@ -310,15 +363,16 @@ jQuery(document).ready(function($){
         this.productsWrapper.animate( {scrollLeft: scrollLeft}, 200 );
     }
 
+    
     comparisonTables = [];
     $('.cd-products-comparison-table').each(function(){
         //create a productsTable object for each .cd-products-comparison-table
         comparisonTables.push(new productsTable($(this)));
     });
-
+    /*
     var windowScrolling = false;
     //detect window scroll - fix product top-info on scrolling
-    /*
+    
     $(window).on('scroll', function(){
         if(!windowScrolling) {
             windowScrolling = true;
@@ -461,7 +515,7 @@ function loadLocations(list, amount) {
                     '<div>' + response.businesses[i].review_count + ' Reviews</div>' +
                     '<div>' + response.businesses[i].price + '</div>' +
                     // Add/Remove Button Toggle
-                    '<button onclick="btnUpdate(this.value)" value="' + response.businesses[i].id + '">Add</button>' +
+                    '<button onclick="btnUpdate(this)" value="' + response.businesses[i].id + '">Add</button>' +
                 '</li>';
             }
         }
@@ -469,18 +523,19 @@ function loadLocations(list, amount) {
     mostRecentSearchOffset += amount;
 }
 
-function btnUpdate(businessID){
-    let btn = $(this);
-    var businessObj = businessArr[businessID];
-    if (btn.text == 'Add'){
-        
-        comparisonTables.push(businessObj);
+function btnUpdate(buttonObject){
+    let btn = $(buttonObject);
+    console.log(btn);
+    var businessObj = businessArr[buttonObject.value];
+    if (btn.text() == 'Add'){
+        comparisonArr.push(businessObj);
+        comparisonTables[0].updateTable(businessObj);
         console.log('add to business array', businessObj);
     }
     else {
         for (let j = 0; j < comparisonTables.length; j++){
             if (businessObj == comparisonTables[j]){
-                { businessArr.splice(j, 1); j--; } 
+                businessArr[buttonObject.value] = undefined;
             }
         }
         console.log('removed business from array', businessObj);
@@ -537,13 +592,16 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
 
 function search_btn_press() {
     console.log('Search Bar Params: ', _description.value, _location.value);
-    mostRecentSearchOffset = 0;
+    refreshList()
+    window.location.href = '#listing';
+}
+
+function refreshList(){
     let list = document.getElementById("listing-area");
     list.innerHTML =    "<li LoadingTag><h1 class=\"heading\"><span>Loading</span></h1></li>" + 
                         "<li><h1 class=\"heading\"><span> . . . </span></h1></li>";
     mostRecentSearchOffset = 0;
     loadLocations(list, 10); 
-    window.location.href = '#listing';
 }
 
 /*
@@ -671,7 +729,6 @@ function updateButton() {
         //paragraph.textContent = 'The machine is stopped.';
     }
 };
-
 
 // total number of businesses in array
 var numBusiness = 0;
