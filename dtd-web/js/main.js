@@ -522,15 +522,29 @@ function loadLocations(list, amount) {
                 //var myLatLng = {bLat, bLong};
 
                 infowindow = new google.maps.InfoWindow();
+                // label markers alphabetically based off of order generated
+                var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                var labelIndex = 0;
 
                 var marker1, j;
                 j = i;
                 marker1 = new google.maps.Marker({
                     position: new google.maps.LatLng(bLat, bLong),
                     map: map,
+                    label: labels[labelIndex++ % labels.length],
                     title: 'Click to zoom'
-                  });
-          
+                });
+
+                
+                var contentString = '<h3>' + businessName + '</h3>' +
+                '<img src="' + starPicURL +'">' +
+                '<div>' + response.businesses[i].review_count + ' Reviews</div>' +
+                '<div>' + response.businesses[i].price + '</div>';
+      
+                var infoWindow1 = new google.maps.InfoWindow({
+                    content: contentString
+                });
+
                   /*map.addListener('center_changed', function() {
                     // 3 seconds after the center of the map has changed, pan back to the marker.
                     window.setTimeout(function() {
@@ -538,12 +552,13 @@ function loadLocations(list, amount) {
                     }, 3000);
                   });*/
                   
-                  // weird because the larger the zoom number, the closer it zooms in,
-                  // whereas when you're initializing the map, the smaller the zoom number, the closer you start zoomed in
-                  marker1.addListener('click', function() {
+                // weird because the larger the zoom number, the closer it zooms in,
+                // whereas when you're initializing the map, the smaller the zoom number, the closer you start zoomed in
+                marker1.addListener('click', function() {
                     map.setZoom(18);
                     map.setCenter(marker1.getPosition());
-                  });
+                    infoWindow1.open(map, marker1)
+                });
                   // still need to add function where user can click button and have content show
                   // e.g. Business Name, Address, option to take you to google maps
             }
