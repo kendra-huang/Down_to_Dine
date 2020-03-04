@@ -32,34 +32,6 @@ jQuery(document).ready(function($){
 
 
 
-
-    var objArray = [];
-    $('.imgbtn').click(function () {
-        console.log('called');
-        var name = document.getElementById("name").value;
-        var price = document.getElementById("price").value;
-        var rating = document.getElementById("rating").value;
-        var businessLoc = document.getElementById("location").value;
-        var businessID = document.getElementById("business").value;
-        yelpRequest(name, price, rating, businessLoc).then(response => {
-        });
-
-        var title = $(this).parent().parent().find('span').html();
-        if (!alreadyAdded(title)) {
-            var image = $(this).parent().parent().find('img').prop('src');
-            var newLength = objArray.push({
-                id: objArray.length + 1,
-                title: title,
-                image: image,
-                description: 'Example'
-            });
-            $('#lblCart').html(newLength);
-        }
-        else {
-            alert("Already added");
-        }
-    });
-
     function alreadyAdded(itemTitle) {
         for (var i = 0; i < objArray.length; i++) {
             if (objArray[i].title === itemTitle) {
@@ -392,11 +364,14 @@ jQuery(document).ready(function($){
 
 });
 
+// Top Search Bar Entries
+var description = document.getElementById("description"),
+var location    = document.getElementById("location");
+//////////////////////
+
 // Stores the most recent yelp API search
 var mostRecentSearchOffset = 0;
-var abutton = document.createElement('BUTTON');
-var rbutton = document.createElement('BUTTON');
-
+var businessArr = {};
 function loadLocations(list, amount) {
     console.log('loadLocations() called');
     params = {
@@ -434,6 +409,9 @@ function loadLocations(list, amount) {
             }
             var starPic = '';
             for (i = 0; i < amount; i++){
+                let businessID = response.businesses[i].id;
+                let businessObj = response.businesses[i];
+                businessArr[businessID] = businessObj;
                 var rating = response.businesses[i].rating;
                 switch(rating){
                     case 0: 
@@ -481,40 +459,40 @@ function loadLocations(list, amount) {
                 starPic
                 //response.businesses[i].rating
                 // Add/Remove Button Toggle
-                +'"><button type="button" id=\'i\' value = ' +
+                +'"><button onclick="btnUpdate(this.value)" value = ' +
                 // business id
                 response.businesses[i].id +
                 +'>Add</button>' +
                 
                 '</div></li>';
-
-                $("button").click(function(){
-                    $(this).text($(this).text() == 'Add' ? 'Remove' : 'Add');
-                });
-                
-                if ($(this).text == 'Remove'){
-                    var businessObj = response.businesses[i];
-                    var businessArr = [];
-                    businessArr.push(businessObj);
-                    console.log('add to business array', businessArr);
-                }
-                else {
-                    //document.getElementById(0)
-                }
             }
         }
     });
     mostRecentSearchOffset += amount;
 }
 
+function btnUpdate(businessID){
+    let btn = $(this);
+    let businessObj = businessArr[businessID];
+    if (btn.text == 'Add'){
+        
+        comparisonTables.push(businessObj);
+        console.log('add to business array', businessObj);
+    }
+    else {
+        for (let j = 0; j < comparisonTables.length; j++){
+            if (businessObj == comparisonTables[j]){
+                { businessArr.splice(j, 1); j--; } 
+            }
+        }
+        console.log('removed business from array', businessObj);
+        //document.getElementById(0)
+    }
+    btn.text(btn.text() == 'Add' ? 'Remove' : 'Add');
+}
+
 // Yelp api Function calls
 const apiKey = 'EjKBKGiEKnrhbi-wjpdU-5Ch3Xs8QbL3dKnz3efiJKLLND6qSPoTAH469ah0TQ5C67qQKiLZDo7HNZas-JCEbb0Tz70D-t2pA6SdxgcAUwz2JdwMOZm7LGG7e3RQXnYx';
-
-
-// Top Search Bar Entries
-var description = document.getElementById("description"),
-    location    = document.getElementById("location");
-//////////////////////
 
 function search_btn_press() {
     console.log('Search Bar Params: ', description.value, location.value);
@@ -554,8 +532,8 @@ async function yelpRequest(params) {
             "Authorization": "Bearer "+apiKey
         })
     }
-    let queryString = yelp_corsanywhere + searchType + $.param(params);
-    console.log("queryString = ", queryString);
+    //let queryString = yelp_corsanywhere + searchType + $.param(params);
+    //console.log("queryString = ", queryString);
     var response;
     try {
         // turn params into a queuestring and fetch 
@@ -627,7 +605,7 @@ var clicked = false;
 var count = 0;
 
 const button = document.querySelector('input');
-// const paragraph = document.querySelector('p');
+const paragraph = document.querySelector('p');
 if (button){
     button.addEventListener("click", updateButton);
     console.log("button clicked");
