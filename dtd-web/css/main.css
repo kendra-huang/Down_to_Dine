@@ -486,31 +486,14 @@ nav .block .navbar-default .navbar-nav > .active > a:hover:before {
   padding: 40px 0px;
 }
 /*--
-    Testing button alignment for removing and adding restaurant
+    Google Maps API
 --*/
-#outer
-{
-    width:100%;
-    text-align: center;
+#map {
+  height: 400px;  /* The height is 400 pixels */
+  width: 85%;  /* The width is the width of the web page */
+  position: relative;
+  padding: 40px 0px;
 }
-.inner
-{
-    display: inline-block;
-}
-
-.button {
-  background-color: #4CAF50;
-  border: none;
-  color: white;
-  padding: 15px 32px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  margin: 4px 2px;
-  cursor: pointer;
-}
-
 
 /*--
     blog Start
