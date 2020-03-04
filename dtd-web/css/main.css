@@ -492,6 +492,8 @@ nav .block .navbar-default .navbar-nav > .active > a:hover:before {
   height: 600px;  /* The height is 400 pixels */
   width: 100%;  /* Fill the entire container it's inside of  */
   position: relative;
+  padding: 50px 0px;
+  margin-top: 50px;
 }
 
 /*--

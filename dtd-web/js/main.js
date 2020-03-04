@@ -1,4 +1,3 @@
-
 jQuery(document).ready(function($){
     // Top Search Bar Entries
     _description = document.getElementById("description");
@@ -467,6 +466,9 @@ function loadLocations(list, amount) {
                 var redirectToYelpURL = response.businesses[i].url;
                 let businessID = response.businesses[i].id;
                 let businessObj = response.businesses[i];
+                let businessName = response.businesses[i].name;
+                let bLat = response.businesses[i].coordinates.latitude;
+                let bLong = response.businesses[i].coordinates.longitude;
                 businessArr[businessID] = businessObj;
                 var rating = response.businesses[i].rating;
                 switch(rating){
@@ -510,13 +512,40 @@ function loadLocations(list, amount) {
                         '<a href="' + redirectToYelpURL + '"target="_blank">' + '<img src="' + response.businesses[i].image_url +'" alt="blog-img">' + '</a>' +
                     '</div>' +
                     '<div class="content-right">' +
-                        '<h3>' + response.businesses[i].name + '</h3>' +
+                        '<h3>' + businessName + '</h3>' +
                         '<img src="' + starPicURL +'">' +
                     '<div>' + response.businesses[i].review_count + ' Reviews</div>' +
                     '<div>' + response.businesses[i].price + '</div>' +
                     // Add/Remove Button Toggle
                     '<button onclick="btnUpdate(this)" value="' + response.businesses[i].id + '">Add</button>' +
                 '</li>';
+                //var myLatLng = {bLat, bLong};
+
+                infowindow = new google.maps.InfoWindow();
+
+                var marker1, j;
+                j = i;
+                marker1 = new google.maps.Marker({
+                    position: new google.maps.LatLng(bLat, bLong),
+                    map: map,
+                    title: 'Click to zoom'
+                  });
+          
+                  /*map.addListener('center_changed', function() {
+                    // 3 seconds after the center of the map has changed, pan back to the marker.
+                    window.setTimeout(function() {
+                      map.panTo(marker1.getPosition());
+                    }, 3000);
+                  });*/
+                  
+                  // weird because the larger the zoom number, the closer it zooms in,
+                  // whereas when you're initializing the map, the smaller the zoom number, the closer you start zoomed in
+                  marker1.addListener('click', function() {
+                    map.setZoom(18);
+                    map.setCenter(marker1.getPosition());
+                  });
+                  // still need to add function where user can click button and have content show
+                  // e.g. Business Name, Address, option to take you to google maps
             }
         }
     });
@@ -547,16 +576,12 @@ function btnUpdate(buttonObject){
 // Yelp api Function calls
 const apiKey = 'EjKBKGiEKnrhbi-wjpdU-5Ch3Xs8QbL3dKnz3efiJKLLND6qSPoTAH469ah0TQ5C67qQKiLZDo7HNZas-JCEbb0Tz70D-t2pA6SdxgcAUwz2JdwMOZm7LGG7e3RQXnYx';
 
-// Google api function calls
-const googleAPI = 'AIzaSyB_HRi3y7icUTSWgh-pWM69OCql3sno7K4'; 
-
 // Initialize and add the map
-var map, infoWindow;
+var map, infoWindow, marker;
 function initMap() {
-
     map = new google.maps.Map(document.getElementById('map'), {
         center: {lat: -34.397, lng: 150.644},
-        zoom: 6
+        zoom: 11
     });
     infoWindow = new google.maps.InfoWindow;
 
@@ -568,8 +593,10 @@ function initMap() {
             lng: position.coords.longitude
         };
 
+        // The marker, positioned at your location
+
         infoWindow.setPosition(pos);
-        infoWindow.setContent('Location found.');
+        infoWindow.setContent('Current Location');
         infoWindow.open(map);
         map.setCenter(pos);
         }, function() {
@@ -589,6 +616,7 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
     infoWindow.open(map);
 }
 
+//async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB_HRi3y7icUTSWgh-pWM69OCql3sno7K4&callback=initMap";
 
 function search_btn_press() {
     console.log('Search Bar Params: ', _description.value, _location.value);
