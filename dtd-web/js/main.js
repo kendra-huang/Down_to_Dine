@@ -1,5 +1,9 @@
 
 jQuery(document).ready(function($){
+
+    // Top Search Bar Entries
+    _description = document.getElementById("description");
+    _location = document.getElementById("location");
     
     // Makes the Nav-bar stick to the top
     $("#navigation").sticky();    
@@ -362,13 +366,9 @@ jQuery(document).ready(function($){
             'transform': 'translateX(' + value + 'px)'
         });
     }
-
+    
 });
 
-// Top Search Bar Entries
-var description = document.getElementById("description"),
-var location    = document.getElementById("location");
-//////////////////////
 
 // Stores the most recent yelp API search
 var mostRecentSearchOffset = 0;
@@ -376,8 +376,8 @@ var businessArr = {};
 function loadLocations(list, amount) {
     console.log('loadLocations() called');
     params = {
-        location:   location.value,
-        term:       "restaurant "+description.value,
+        location:   _location.value,
+        term:       "restaurant "+_description.value,
         offset:     mostRecentSearchOffset,
         limit:      amount
     }
@@ -508,7 +508,7 @@ function btnUpdate(businessID){
 const apiKey = 'EjKBKGiEKnrhbi-wjpdU-5Ch3Xs8QbL3dKnz3efiJKLLND6qSPoTAH469ah0TQ5C67qQKiLZDo7HNZas-JCEbb0Tz70D-t2pA6SdxgcAUwz2JdwMOZm7LGG7e3RQXnYx';
 
 function search_btn_press() {
-    console.log('Search Bar Params: ', description.value, location.value);
+    console.log('Search Bar Params: ', _description.value, _location.value);
     mostRecentSearchOffset = 0;
     window.location.href = '#listing';
 }
@@ -545,8 +545,8 @@ async function yelpRequest(params) {
             "Authorization": "Bearer "+apiKey
         })
     }
-    //let queryString = yelp_corsanywhere + searchType + $.param(params);
-    //console.log("queryString = ", queryString);
+    let queryString = yelp_corsanywhere + searchType + $.param(params);
+    console.log("queryString = ", queryString);
     var response;
     try {
         // turn params into a queuestring and fetch 
@@ -571,9 +571,9 @@ async function yelpRequest(params) {
 // Sets the City and State of the user into the location bar whenever
 // they choose the "Your Location" option
 function setLocation() {
-    if (location.value == "Your Location") {
+    if (_location.value == "Your Location") {
         if (navigator.geolocation){
-            location.value = "Finding Location...";
+            _location.value = "Finding Location...";
             navigator.geolocation.getCurrentPosition(position => {
                 yelpRequest({
                     latitude:   position.coords.latitude,
@@ -582,11 +582,11 @@ function setLocation() {
                 }).then(response => {
                     if (response != undefined){
                         let first = response.businesses[0];
-                        location.value = first.location.city + ', ' + first.location.state;                        
+                        _location.value = first.location.city + ', ' + first.location.state;                        
                     }else{
-                        location.value = "Location could not be Found."
+                        _location.value = "Location could not be Found."
                         setTimeout(function() {
-                            location.value = "";
+                            _location.value = "";
                         }, 250);
                     }
                 });
