@@ -362,7 +362,6 @@ jQuery(document).ready(function($){
         this.productsWrapper.animate( {scrollLeft: scrollLeft}, 200 );
     }
 
-    
     comparisonTables = [];
     $('.cd-products-comparison-table').each(function(){
         //create a productsTable object for each .cd-products-comparison-table
@@ -471,6 +470,7 @@ function loadLocations(list, amount) {
                 let bLong = response.businesses[i].coordinates.longitude;
                 businessArr[businessID] = businessObj;
                 var rating = response.businesses[i].rating;
+                var contentStringArr = [];
                 switch(rating){
                     case 0: 
                         starPicURL = './yelp stars/yelp_stars/web_and_ios/regular/regular_0.png';
@@ -519,53 +519,35 @@ function loadLocations(list, amount) {
                     // Add/Remove Button Toggle
                     '<button onclick="btnUpdate(this)" value="' + response.businesses[i].id + '">Add</button>' +
                 '</li>';
-                //var myLatLng = {bLat, bLong};
 
-                infowindow = new google.maps.InfoWindow();
-                // label markers alphabetically based off of order generated
-                var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-                var labelIndex = 0;
 
-                var marker1, j;
-                j = i;
-                marker1 = new google.maps.Marker({
+                  
+                // still need to add function where user can click button and have content show
+                // e.g. Business Name, Address, option to take you to google maps
+
+                let info_window = new google.maps.InfoWindow({    
+                    content: '<h3>' + businessName + '</h3>' +
+                                '<img src="' + starPicURL +'">' +
+                                '<div>' + response.businesses[i].review_count + ' Reviews</div>' +
+                                '<div>' + response.businesses[i].price + '</div>'
+                })
+                // creates new marker for each restaurant generated
+                new google.maps.Marker({
                     position: new google.maps.LatLng(bLat, bLong),
                     map: map,
-                    label: labels[labelIndex++ % labels.length],
+                    label: i,
                     title: 'Click to zoom'
+                }).addListener('click', function(){
+                    map.setZoom(16);
+                    map.setCenter(this.getPosition());
+                    info_window.open(map, this);
                 });
-
-                
-                var contentString = '<h3>' + businessName + '</h3>' +
-                '<img src="' + starPicURL +'">' +
-                '<div>' + response.businesses[i].review_count + ' Reviews</div>' +
-                '<div>' + response.businesses[i].price + '</div>';
-      
-                var infoWindow1 = new google.maps.InfoWindow({
-                    content: contentString
-                });
-
-                  /*map.addListener('center_changed', function() {
-                    // 3 seconds after the center of the map has changed, pan back to the marker.
-                    window.setTimeout(function() {
-                      map.panTo(marker1.getPosition());
-                    }, 3000);
-                  });*/
-                  
-                // weird because the larger the zoom number, the closer it zooms in,
-                // whereas when you're initializing the map, the smaller the zoom number, the closer you start zoomed in
-                marker1.addListener('click', function() {
-                    map.setZoom(18);
-                    map.setCenter(marker1.getPosition());
-                    infoWindow1.open(map, marker1)
-                });
-                  // still need to add function where user can click button and have content show
-                  // e.g. Business Name, Address, option to take you to google maps
             }
         }
     });
     mostRecentSearchOffset += amount;
 }
+
 
 function btnUpdate(buttonObject){
     let btn = $(buttonObject);
@@ -598,6 +580,8 @@ function initMap() {
         center: {lat: -34.397, lng: 150.644},
         zoom: 11
     });
+    
+
     infoWindow = new google.maps.InfoWindow;
 
     // Try HTML5 geolocation.
@@ -609,25 +593,67 @@ function initMap() {
         };
 
         // The marker, positioned at your location
+        new google.maps.Marker({
+            position: pos,
+            map: map,
+            icon: {
+                url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
+            },
+            //draggable:true
+        }).addListener('click', function(){
+            //info_window.open(map, this);
+            infoWindow.setPosition(pos);
+            infoWindow.setContent('Current Location');
+            infoWindow.open(map);
+            //map.setCenter(pos);
+        });
 
-        infoWindow.setPosition(pos);
-        infoWindow.setContent('Current Location');
-        infoWindow.open(map);
+        //map.setZoom(16);
         map.setCenter(pos);
+
+
         }, function() {
-        handleLocationError(true, infoWindow, map.getCenter());
+            handleLocationError(true, infoWindow, map.getCenter());
         });
     } else {
         // Browser doesn't support Geolocation
         handleLocationError(false, infoWindow, map.getCenter());
     }
+
+    /*var secretMessages = ['This', 'is', 'the', 'secret', 'message'];
+    var lngSpan = bounds.east - bounds.west;
+    var latSpan = bounds.north - bounds.south;
+
+    for (var i = 0; i < secretMessages.length; ++i) {
+        var marker = new google.maps.Marker({
+            position: {
+            lat: bounds.south + latSpan * Math.random(),
+            lng: bounds.west + lngSpan * Math.random()
+            },
+            map: map
+        });
+        attachSecretMessage(marker, secretMessages[i]);
+    }*/
 }
+
+// Attaches an info window to a marker with the provided message. When the
+// marker is clicked, the info window will open with the secret message.
+/*function attachSecretMessage(marker, secretMessage) {
+    var infowindow = new google.maps.InfoWindow({
+        content: secretMessage
+    });
+
+    marker.addListener('click', function() {
+        infowindow.open(marker.get('map'), marker);
+    }); 
+}*/
+
 
 function handleLocationError(browserHasGeolocation, infoWindow, pos) {
     infoWindow.setPosition(pos);
     infoWindow.setContent(browserHasGeolocation ?
-                            'Error: The Geolocation service failed.' :
-                            'Error: Your browser doesn\'t support geolocation.');
+        'Error: The Geolocation service failed.' :
+        'Error: Your browser doesn\'t support geolocation.');
     infoWindow.open(map);
 }
 
