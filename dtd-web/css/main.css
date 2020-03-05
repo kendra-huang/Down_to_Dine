@@ -339,7 +339,7 @@ th, td {
 #refresh {
   display: block;
   margin-top: 50px;
-  margin-right: 35px;
+  margin-right: 25px;
   padding: 30px 50px;
   border: none;
   background-color: #ff3a6d;
@@ -433,6 +433,17 @@ nav .block .navbar-default .navbar-nav > .active > a:hover:before {
     slider Start
 --*/
 #slider {
+  /*
+  background-color: #0ae;
+  background-image: -webkit-linear-gradient(45deg,
+  rgba(255, 255, 255, .2) 25%,
+  transparent 25%,
+  transparent 50%,
+  rgba(255, 255, 255, .2) 50%,
+  rgba(255, 255, 255, .2) 75%,
+  transparent 75%,
+  transparent);
+  */
   padding: 50px 0px;
 }
 #slider .block {

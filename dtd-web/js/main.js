@@ -1,7 +1,15 @@
+
+
+var tableAdd, tableRemove;
+
 jQuery(document).ready(function($){
     // Top Search Bar Entries
     _description = document.getElementById("description");
     _location = document.getElementById("location");
+    _position = {
+        latitude: undefined,
+        longitude: undefined
+    }
     
     // Makes the Nav-bar stick to the top
     $("#navigation").sticky();    
@@ -73,71 +81,76 @@ jQuery(document).ready(function($){
         // bind table events
         this.bindEvents();
 
-        // new
-        this.filterBtn.addClass('active');
+        // NEW 
         this.tableColumns.css('width', this.productWidth*this.productsNumber + 'px');
     }
 
-    productsTable.prototype.tableAddNew = function(business) {
-        let newElement = 
-        '<li class="product">'+
-            '<div class="top-info">'+
-                '<div class="check"></div>'+
-                '<img src="img/product.png" alt="product image">'+
-                '<h3>Sumsung Series 6 J6300</h3>'+
-            '</div>'+
-            // .top-info ^
-            '<ul class="cd-features-list">'+
-                '<li>$600</li>'+
-                '<li class="rate"><span>5/5</span></li>'+
-                '<li>1080p</li>'+
-                '<li>LED</li>'+
-                '<li>47.6 inches</li>'+
-                '<!-- <li>800Hz</li>'+
-                '<li>2015</li>'+
-                '<li>mpeg4</li>'+
-                '<li>1 Side</li>'+
-                '<li>3 Port</li>'+
-                '<li>1 Rear</li>'+
-            '</ul>'+
-        '</li>';
-        self.products.append(newElement);
-        self.productsTopInfo = self.table.find('.top-info');
-        self.productsNumber += 1;
-        this.tableColumns.css('width', this.productWidth*this.productsNumber + 'px');
-    }
-    
-    
-    comparisonArr = [];
-    productsTable.prototype.tableRemove = function() {
-        let newElement = 
-        '<li class="product">'+
-            '<div class="top-info">'+
-                '<div class="check"></div>'+
-                '<img src="img/product.png" alt="product image">'+
-                '<h3>Sumsung Series 6 J6300</h3>'+
-            '</div>'+
-            // .top-info ^
-            '<ul class="cd-features-list">'+
-                '<li>$600</li>'+
-                '<li class="rate"><span>5/5</span></li>'+
-                '<li>1080p</li>'+
-                '<li>LED</li>'+
-                '<li>47.6 inches</li>'+
-                '<!-- <li>800Hz</li>'+
-                '<li>2015</li>'+
-                '<li>mpeg4</li>'+
-                '<li>1 Side</li>'+
-                '<li>3 Port</li>'+
-                '<li>1 Rear</li>'+
-            '</ul>'+
-        '</li>';
-        self.products.append(newElement);
-        self.productsTopInfo = self.table.find('.top-info');
-        self.productsNumber += 1;
-        this.tableColumns.css('width', this.productWidth*this.productsNumber + 'px');
-    }
 
+    comparisonMap = {};
+    //const acceptedCatagories = new Set(['American','Japanese', 'Vietnamese', 'Korean', 'Italian', 'Thai', 'Chinese', 'Mexican', 'Indian', 'Scottish', ]);
+    function getCatagories(categories){
+        let terms = '';
+        for(i in categories)
+            terms += categories[i].title+'<br>';
+        return terms;
+    }
+    function getLocationInfo(address){
+        let terms = '';
+        for(i in address)
+            terms += address[i]+'<br>';
+        return terms;
+    }
+    function getBusinessDistance(business, pos){
+        console.log('current position (lat, long) >> ', pos.latitude, pos.longitude);
+        return (Math.sqrt(Math.pow(business.coordinates.latitude - pos.latitude, 2) + Math.pow(business.coordinates.longitude - pos.longitude, 2)) * 69.09 ).toFixed(2);
+    }
+    productsTable.prototype.tableAdd = function(businessObj) {
+        let newElement = $(
+        '<li class="product" id="'+businessObj.id+'">'+
+            '<div class="top-info">'+
+                '<div class="check"></div>'+
+                '<img src="'+ businessObj.image_url +'" alt="product image">'+
+                '<h3>'+ businessObj.name +'</h3>'+
+            '</div>'+
+            // .top-info ^
+            '<ul class="cd-features-list">'+
+                '<li>'+businessObj.price+'</li>'+
+                '<li class="rate"><img src="'+getRatingImgURL(businessObj.rating)+'"></li>'+
+                '<li>'+ getCatagories(businessObj.categories)+'</li>'+ // TODO
+                '<li>'+ getLocationInfo(businessObj.location.display_address) +'</li>'+
+                '<li>'+getBusinessDistance(businessObj, _position) +' Miles from You</li>'+
+            '</ul>'+
+        '</li>');
+        let comp = comparisonTables[0];
+        comp.tableColumns.append(newElement);
+        newElement.on('click', '.top-info', function() {
+            var product = $(this).parents('.product');
+            if( product.hasClass('selected') ) {
+                product.removeClass('selected');
+                comp.selectedproductsNumber = comp.selectedproductsNumber - 1;
+                comp.updateFilterBtn();
+            } else if( !product.hasClass('selected') ) {
+                product.addClass('selected');
+                comp.selectedproductsNumber = comp.selectedproductsNumber + 1;
+                comp.updateFilterBtn();
+            }
+        })
+        comp.productsTopInfo = comp.table.find('.top-info');
+        comp.products = comp.tableColumns.children('.product');
+        comp.productsNumber += 1;
+        comp.tableColumns.css('width', comp.productWidth*comp.productsNumber + 'px');
+    }
+    tableAdd = productsTable.prototype.tableAdd;
+
+    productsTable.prototype.tableRemove = function(businessObj) {
+        let comp = comparisonTables[0];
+        comp.tableColumns.children("#"+businessObj.id).remove();
+        //  `comp.productsTopInfo = comp.table.find('.top-info');
+        comp.products = comp.tableColumns.children('.product');
+        comp.productsNumber -= 1;
+        comp.tableColumns.css('width', comp.productWidth*comp.productsNumber + 'px');
+    }
+    tableRemove = productsTable.prototype.tableRemove;
     
     productsTable.prototype.bindEvents = function() {
         var self = this;
@@ -290,40 +303,6 @@ jQuery(document).ready(function($){
             numberProducts = selectedProducts.length;
 
         self.tableColumns.css('width', self.productWidth*numberProducts + 'px');
-            /*
-        selectedProducts.each(function(index){
-            var product = $(this),
-                leftTranslate = containerOffsetLeft + index*self.productWidth + scrollLeft - product.offset().left;
-            setTranformX(product, leftTranslate);
-            
-            if(index == numberProducts - 1 ) {
-                product.one('webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend', function(){
-                    setTimeout(function(){
-                        //self.element.addClass('no-product-transition');
-                    }, 50);
-                    setTimeout(function(){
-                        //self.element.addClass('filtered');
-                        self.productsWrapper.scrollLeft(0);
-                        self.tableColumns.css('width', self.productWidth*numberProducts + 'px');
-                        selectedProducts.attr('style', '');
-                        product.off('webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend');
-                        self.updateNavigationVisibility(0);
-                    }, 100);
-                    
-                });
-            }
-            
-        });
-
-        if( $('.no-csstransitions').length > 0 ) {
-            //browser not supporting css transitions
-            self.element.addClass('filtered');
-            self.productsWrapper.scrollLeft(0);
-            self.tableColumns.css('width', self.productWidth*numberProducts + 'px');
-            selectedProducts.attr('style', '');
-            self.updateNavigationVisibility(0);
-        }
-        */      
     }
 
     productsTable.prototype.resetProductsVisibility = function() {
@@ -393,7 +372,6 @@ jQuery(document).ready(function($){
         comparisonTables.forEach(function(element){
             element.updateTopScrolling(scrollTop);
         });
-
         windowScrolling = false;
     }
 
@@ -401,7 +379,6 @@ jQuery(document).ready(function($){
         comparisonTables.forEach(function(element){
             element.updateProperties();
         });
-
         windowResize = false;
     }
 
@@ -424,7 +401,7 @@ jQuery(document).ready(function($){
 
 // Stores the most recent yelp API search
 var mostRecentSearchOffset = 0;
-var businessArr = {};
+var businessMap = {};
 function loadLocations(list, amount) {
     console.log('loadLocations() called');
     params = {
@@ -465,46 +442,9 @@ function loadLocations(list, amount) {
                 var redirectToYelpURL = response.businesses[i].url;
                 let businessID = response.businesses[i].id;
                 let businessObj = response.businesses[i];
-                let businessName = response.businesses[i].name;
-                let bLat = response.businesses[i].coordinates.latitude;
-                let bLong = response.businesses[i].coordinates.longitude;
-                businessArr[businessID] = businessObj;
+                businessMap[businessID] = businessObj;
                 var rating = response.businesses[i].rating;
-                var contentStringArr = [];
-                switch(rating){
-                    case 0: 
-                        starPicURL = './yelp stars/yelp_stars/web_and_ios/regular/regular_0.png';
-                        break;
-                    case 1:
-                        starPicURL = './yelp stars/yelp_stars/web_and_ios/regular/regular_1.png';
-                        break;
-                    case 1.5:
-                        starPicURL = './yelp stars/yelp_stars/web_and_ios/regular/regular_1_half.png';
-                        break;
-                    case 2:
-                        starPicURL = './yelp stars/yelp_stars/web_and_ios/regular/regular_2.png';
-                        break;
-                    case 2.5:
-                        starPicURL = './yelp stars/yelp_stars/web_and_ios/regular/regular_2_half.png';
-                        break;
-                    case 3:
-                        starPicURL = './yelp stars/yelp_stars/web_and_ios/regular/regular_3.png';
-                        break;
-                    case 3.5:
-                        starPicURL = './yelp stars/yelp_stars/web_and_ios/regular/regular_3_half.png';
-                        break;
-                    case 4:
-                        starPicURL = "./yelp stars/yelp_stars/web_and_ios/regular/regular_4.png";
-                        break;
-                    case 4.5:
-                        starPicURL = './yelp stars/yelp_stars/web_and_ios/regular/regular_4_half.png';
-                        break;
-                    case 5:
-                        starPicURL = './yelp stars/yelp_stars/web_and_ios/regular/regular_5.png';
-                        break;
-                    default:
-                        starPicURL = '';
-                }
+                starPicURL = getRatingImgURL(rating);
                 
                 list.innerHTML +=
                 '<li>'+
@@ -515,7 +455,7 @@ function loadLocations(list, amount) {
                         '<h3>' + businessName + '</h3>' +
                         '<img src="' + starPicURL +'">' +
                     '<div>' + response.businesses[i].review_count + ' Reviews</div>' +
-                    '<div>' + response.businesses[i].price + '</div>' +
+                    '<div>' + (response.businesses[i].price != undefined ? response.businesses[i].price : "Price Unavailable") + '</div>' +
                     // Add/Remove Button Toggle
                     '<button onclick="btnUpdate(this)" value="' + response.businesses[i].id + '">Add</button>' +
                 '</li>';
@@ -552,23 +492,49 @@ function loadLocations(list, amount) {
 function btnUpdate(buttonObject){
     let btn = $(buttonObject);
     console.log(btn);
-    var businessObj = businessArr[buttonObject.value];
+    var businessObj = businessMap[buttonObject.value];
     if (btn.text() == 'Add'){
-        comparisonArr.push(businessObj);
-        comparisonTables[0].updateTable(businessObj);
+        comparisonMap[buttonObject.value] = businessObj;
+        tableAdd(businessObj);
         console.log('add to business array', businessObj);
     }
     else {
-        for (let j = 0; j < comparisonTables.length; j++){
-            if (businessObj == comparisonTables[j]){
-                businessArr[buttonObject.value] = undefined;
-            }
-        }
+        comparisonMap[buttonObject.value] = undefined;
+        tableRemove(businessObj);
         console.log('removed business from array', businessObj);
         //document.getElementById(0)
     }
     btn.text(btn.text() == 'Add' ? 'Remove' : 'Add');
 }
+
+
+function getRatingImgURL(rating){
+    switch(rating){
+        case 0: 
+            return './yelp stars/yelp_stars/web_and_ios/regular/regular_0.png';
+        case 1:
+            return './yelp stars/yelp_stars/web_and_ios/regular/regular_1.png';
+        case 1.5:
+            return './yelp stars/yelp_stars/web_and_ios/regular/regular_1_half.png';
+        case 2:
+            return './yelp stars/yelp_stars/web_and_ios/regular/regular_2.png';
+        case 2.5:
+            return './yelp stars/yelp_stars/web_and_ios/regular/regular_2_half.png';
+        case 3:
+            return './yelp stars/yelp_stars/web_and_ios/regular/regular_3.png';
+        case 3.5:
+            return './yelp stars/yelp_stars/web_and_ios/regular/regular_3_half.png';
+        case 4:
+            return "./yelp stars/yelp_stars/web_and_ios/regular/regular_4.png";
+        case 4.5:
+            return './yelp stars/yelp_stars/web_and_ios/regular/regular_4_half.png';
+        case 5:
+            return './yelp stars/yelp_stars/web_and_ios/regular/regular_5.png';
+        default:
+            console.log("no rating image was found for rating = ", rating);
+    }    
+}
+
 
 // Yelp api Function calls
 const apiKey = 'EjKBKGiEKnrhbi-wjpdU-5Ch3Xs8QbL3dKnz3efiJKLLND6qSPoTAH469ah0TQ5C67qQKiLZDo7HNZas-JCEbb0Tz70D-t2pA6SdxgcAUwz2JdwMOZm7LGG7e3RQXnYx';
@@ -735,6 +701,10 @@ function setLocation() {
         if (navigator.geolocation){
             _location.value = "Finding Location...";
             navigator.geolocation.getCurrentPosition(position => {
+
+                _position.latitude = position.coords.latitude;
+                _position.longitude = position.coords.longitude;
+
                 yelpRequest({
                     latitude:   position.coords.latitude,
                     longitude:  position.coords.longitude,
@@ -747,7 +717,7 @@ function setLocation() {
                         _location.value = "Location could not be Found."
                         setTimeout(function() {
                             _location.value = "";
-                        }, 250);
+                        }, 1000);
                     }
                 });
             },error => {
@@ -765,71 +735,13 @@ function setLocation() {
                     alert("An unknown error occurred.");
                     break;
                 }
+                _location.value = "Location could not be Found."
+                setTimeout(function() {
+                    _location.value = "";
+                }, 1000);
             });
         }else{
             console.log("geolocation not permitted");
         }
     }
-}
-
-var clicked = false;
-
-// number of times user adds restaurant
-var count = 0;
-
-const button = document.querySelector('input');
-const paragraph = document.querySelector('p');
-if (button){
-    button.addEventListener("click", updateButton);
-    console.log("button clicked");
-}
-
-function updateButton() {
-        if (button.value === 'Add') {
-        button.value = 'Remove';
-        clicked = true;
-        count++;
-        console.log("update button");
-        //paragraph.textContent = 'The machine has started!';
-        } else {
-        button.value = 'Add';
-        clicked = false;
-        count--;
-        //paragraph.textContent = 'The machine is stopped.';
-    }
-};
-
-// total number of businesses in array
-var numBusiness = 0;
-
-function getBusinessInfo(priceList, count) {
-    console.log('called');
-    yelpRequest(document.getElementById("name").value, 
-                document.getElementById("price").value,
-                document.getElementById("rating").value,
-                document.getElementById("location").value).then(response => {
-    });
-}
-        
-
-        //CUISINE
-        //LOCATION
-function loadBusinessInfo(list, amount) {
-    console.log('called');
-    yelpRequest(document.getElementById("location").value,
-                document.getElementById("description").value).then(response => {
-        if (response != undefined){
-            for (i = 0; i < amount; i++){
-                /*list.innerHTML = list.innerHTML +
-                '<li><div class="blog-img"><img src="'+
-                // img address
-                response.businesses[i].image_url
-                +'" alt="blog-img">'+'</div><div class="content-right"><h3>'+
-                //rating
-                response.businesses[i].rating
-                +'</h3></div></li>';*/
-            }
-        }
-    });
-    //mostRecentSearchOffset += amount;
 }
