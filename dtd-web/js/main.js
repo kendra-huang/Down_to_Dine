@@ -62,12 +62,12 @@ jQuery(document).ready(function($){
     function productsTable( element ) {
         this.element = element;
         this.table = this.element.children('.cd-products-table');
-        this.tableHeight = this.table.height();
+        this.tableHeight = 650;//this.table.height();
         this.productsWrapper = this.table.children('.cd-products-wrapper');
         this.tableColumns = this.productsWrapper.children('.cd-products-columns');
         this.products = this.tableColumns.children('.product');
         this.productsNumber = this.products.length;
-        this.productWidth = this.products.eq(0).width();
+        this.productWidth = 310;//this.products.eq(0).width();
         this.productsTopInfo = this.table.find('.top-info');
         this.featuresTopInfo = this.table.children('.features').children('.top-info');
         this.topInfoHeight = this.featuresTopInfo.innerHeight() + 30;
@@ -75,7 +75,7 @@ jQuery(document).ready(function($){
         this.filterBtn = this.element.find('.filter');
         this.resetBtn = this.element.find('.reset');
         this.filtering = false,
-        this.selectedproductsNumber = 0;
+        this.selectedproductsNumber = this.productsNumber;
         this.filterActive = true;
         this.navigation = this.table.children('.cd-table-navigation');
         // bind table events
@@ -106,7 +106,7 @@ jQuery(document).ready(function($){
     }
     productsTable.prototype.tableAdd = function(businessObj) {
         let newElement = $(
-        '<li class="product" id="'+businessObj.id+'">'+
+        '<li class="product selected" id="'+businessObj.id+'">'+
             '<div class="top-info">'+
                 '<div class="check"></div>'+
                 '<img src="'+ businessObj.image_url +'" alt="product image">'+
@@ -118,7 +118,7 @@ jQuery(document).ready(function($){
                 '<li class="rate"><img src="'+getRatingImgURL(businessObj.rating)+'"></li>'+
                 '<li>'+ getCatagories(businessObj.categories)+'</li>'+ // TODO
                 '<li>'+ getLocationInfo(businessObj.location.display_address) +'</li>'+
-                '<li>'+getBusinessDistance(businessObj, _position) +' Miles from You</li>'+
+                '<li>'+ getBusinessDistance(businessObj, _position) +' Miles from You</li>'+
             '</ul>'+
         '</li>');
         let comp = comparisonTables[0];
@@ -134,21 +134,23 @@ jQuery(document).ready(function($){
                 comp.selectedproductsNumber = comp.selectedproductsNumber + 1;
                 comp.updateFilterBtn();
             }
-        })
+        });
         comp.productsTopInfo = comp.table.find('.top-info');
         comp.products = comp.tableColumns.children('.product');
         comp.productsNumber += 1;
-        comp.tableColumns.css('width', comp.productWidth*comp.productsNumber + 'px');
+        comp.selectedproductsNumber += 1;
+        comp.tableColumns.css('width', comp.productWidth+comp.tableColumns.width() + 'px');
     }
     tableAdd = productsTable.prototype.tableAdd;
 
     productsTable.prototype.tableRemove = function(businessObj) {
         let comp = comparisonTables[0];
-        comp.tableColumns.children("#"+businessObj.id).remove();
-        //  `comp.productsTopInfo = comp.table.find('.top-info');
+        let removed = comp.tableColumns.children("#"+businessObj.id);
         comp.products = comp.tableColumns.children('.product');
         comp.productsNumber -= 1;
-        comp.tableColumns.css('width', comp.productWidth*comp.productsNumber + 'px');
+        comp.selectedproductsNumber += ( removed.hasClass('selected') ? -1 : 0 );
+        comp.tableColumns.css('width', ( removed.hasClass('removed') ? 0 : -comp.productWidth )+comp.tableColumns.width() + 'px'); 
+        removed.remove();
     }
     tableRemove = productsTable.prototype.tableRemove;
     
@@ -193,10 +195,12 @@ jQuery(document).ready(function($){
                 self.resetSelection();
             } else {
                 */
-                self.resetSelection();
                 self.products.removeClass('removed selected');
+                self.resetSelection();
+                self.products.addClass('selected')
+                
             //}
-            self.selectedproductsNumber = 0;
+            self.selectedproductsNumber = self.productsNumber;
             self.updateFilterBtn();
         });
         //scroll inside products table
@@ -292,7 +296,7 @@ jQuery(document).ready(function($){
     productsTable.prototype.resetSelection = function() {
         this.tableColumns.css('width', this.productWidth*this.productsNumber + 'px');
         this.element.removeClass('no-product-transition');
-        this.resetProductsVisibility();
+        this.resetProductsVisibility(); 
     }
 
     productsTable.prototype.filterProducts = function() {
@@ -439,41 +443,37 @@ function loadLocations(list, amount) {
             }
             var starPicURL = '';
             for (i = 0; i < amount; i++){
-                var redirectToYelpURL = response.businesses[i].url;
-                let businessID = response.businesses[i].id;
                 let businessObj = response.businesses[i];
-                businessMap[businessID] = businessObj;
-                var rating = response.businesses[i].rating;
-                starPicURL = getRatingImgURL(rating);
+                businessMap[businessObj.id] = businessObj;
+                starPicURL = getRatingImgURL(businessObj.rating);
                 
                 list.innerHTML +=
                 '<li>'+
                     '<div class="blog-img">' +
-                        '<a href="' + redirectToYelpURL + '"target="_blank">' + '<img src="' + response.businesses[i].image_url +'" alt="blog-img">' + '</a>' +
+                        '<a href="' + businessObj.url + '"target="_blank">' + '<img src="' + businessObj.image_url +'" alt="blog-img">' + '</a>' +
                     '</div>' +
                     '<div class="content-right">' +
-                        '<h3>' + businessName + '</h3>' +
+                        '<h3>' + businessObj.name + '</h3>' +
                         '<img src="' + starPicURL +'">' +
-                    '<div>' + response.businesses[i].review_count + ' Reviews</div>' +
-                    '<div>' + (response.businesses[i].price != undefined ? response.businesses[i].price : "Price Unavailable") + '</div>' +
+                    '<div>' + businessObj.review_count + ' Reviews</div>' +
+                    '<div>' + (businessObj.price != undefined ? businessObj.price : "Price Unavailable") + '</div>' +
                     // Add/Remove Button Toggle
-                    '<button onclick="btnUpdate(this)" value="' + response.businesses[i].id + '">Add</button>' +
+                    '<button onclick="btnUpdate(this)" value="' + businessObj.id + '">Add</button>' +
                 '</li>';
-
 
                   
                 // still need to add function where user can click button and have content show
                 // e.g. Business Name, Address, option to take you to google maps
 
                 let info_window = new google.maps.InfoWindow({    
-                    content: '<h3>' + businessName + '</h3>' +
+                    content: '<h3>' + businessObj.name + '</h3>' +
                                 '<img src="' + starPicURL +'">' +
-                                '<div>' + response.businesses[i].review_count + ' Reviews</div>' +
-                                '<div>' + response.businesses[i].price + '</div>'
+                                '<div>' + businessObj.review_count + ' Reviews</div>' +
+                                '<div>' + businessObj.price + '</div>'
                 })
                 // creates new marker for each restaurant generated
                 new google.maps.Marker({
-                    position: new google.maps.LatLng(bLat, bLong),
+                    position: new google.maps.LatLng(businessObj.coordinates.latitude, businessObj.coordinates.longitude),
                     map: map,
                     label: i,
                     title: 'Click to zoom'

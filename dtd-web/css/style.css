@@ -218,6 +218,7 @@ Main Components
 
 
 .cd-products-columns .removed {
+  display: none;
   width: 0px;
   opacity: 0;
   transition-delay: 0.2s;
