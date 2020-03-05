@@ -1,14 +1,14 @@
-
-
 var tableAdd, tableRemove;
+var map, markers = [];
+var useGPSLocation = false;
 
 jQuery(document).ready(function($){
     // Top Search Bar Entries
     _description = document.getElementById("description");
     _location = document.getElementById("location");
     _position = {
-        latitude: undefined,
-        longitude: undefined
+        lat: undefined,
+        lng: undefined
     }
     
     // Makes the Nav-bar stick to the top
@@ -33,7 +33,7 @@ jQuery(document).ready(function($){
     });
     
     $("#refresh").click(refreshList);
-
+    /*
     function alreadyAdded(itemTitle) {
         for (var i = 0; i < objArray.length; i++) {
             if (objArray[i].title === itemTitle) {
@@ -48,6 +48,7 @@ jQuery(document).ready(function($){
         var message = $(this).data('added'); 
         return confirm(message); 
     });
+    */
 
 //Initiate WOW JS
     new WOW().init();
@@ -407,13 +408,20 @@ jQuery(document).ready(function($){
 var mostRecentSearchOffset = 0;
 var businessMap = {};
 function loadLocations(list, amount) {
-    console.log('loadLocations() called');
-    params = {
-        location:   _location.value,
+    console.log('loadLocations() called with, useGPSLocation = '+useGPSLocation);
+    let params = {
         term:       "restaurant "+_description.value,
         offset:     mostRecentSearchOffset,
         limit:      amount
     }
+    if (useGPSLocation){
+        params.longitude = _position.lng;
+        params.latitude = _position.lat;
+    }else{
+        params.location = _location.value;
+    }
+
+
     for (let i = 1; i <= 4; i++){
         if (document.getElementById("cb"+i).checked){
             console.log(params.price);
@@ -438,9 +446,11 @@ function loadLocations(list, amount) {
     }
     yelpRequest(params).then(response => {
         if (response != undefined){
+            // if the page currently has a loading card, remove it before loading
             if (list.innerHTML[4] == 'l'){
                 list.innerHTML = "";
             }
+            // url for the yelp star rating
             var starPicURL = '';
             for (i = 0; i < amount; i++){
                 let businessObj = response.businesses[i];
@@ -453,7 +463,7 @@ function loadLocations(list, amount) {
                         '<a href="' + businessObj.url + '"target="_blank">' + '<img src="' + businessObj.image_url +'" alt="blog-img">' + '</a>' +
                     '</div>' +
                     '<div class="content-right">' +
-                        '<h3>' + businessObj.name + '</h3>' +
+                        '<h3>'+(i+1)+ '<br>' + businessObj.name + '</h3>' +
                         '<img src="' + starPicURL +'">' +
                     '<div>' + businessObj.review_count + ' Reviews</div>' +
                     '<div>' + (businessObj.price != undefined ? businessObj.price : "Price Unavailable") + '</div>' +
@@ -472,23 +482,24 @@ function loadLocations(list, amount) {
                                 '<div>' + businessObj.price + '</div>'
                 })
                 // creates new marker for each restaurant generated
-                new google.maps.Marker({
+                markers.push(new google.maps.Marker({
                     position: new google.maps.LatLng(businessObj.coordinates.latitude, businessObj.coordinates.longitude),
                     map: map,
-                    label: i,
+                    label: ""+(i+1),
                     title: 'Click to zoom'
                 }).addListener('click', function(){
                     map.setZoom(16);
                     map.setCenter(this.getPosition());
                     info_window.open(map, this);
-                });
+                }));
             }
         }
     });
     mostRecentSearchOffset += amount;
 }
 
-
+// Adds or Removes a location in the list to
+// the comparison table
 function btnUpdate(buttonObject){
     let btn = $(buttonObject);
     console.log(btn);
@@ -507,7 +518,7 @@ function btnUpdate(buttonObject){
     btn.text(btn.text() == 'Add' ? 'Remove' : 'Add');
 }
 
-
+// gets yelp star rating picture based off of yelp star rating
 function getRatingImgURL(rating){
     switch(rating){
         case 0: 
@@ -535,107 +546,113 @@ function getRatingImgURL(rating){
     }    
 }
 
-
-// Yelp api Function calls
+// Yelp api Key
 const apiKey = 'EjKBKGiEKnrhbi-wjpdU-5Ch3Xs8QbL3dKnz3efiJKLLND6qSPoTAH469ah0TQ5C67qQKiLZDo7HNZas-JCEbb0Tz70D-t2pA6SdxgcAUwz2JdwMOZm7LGG7e3RQXnYx';
 
-// Initialize and add the map
-var map, infoWindow, marker;
-function initMap() {
+// functions to convert address to coords
+// or coords to address
+// *get defined in initMap()*
+var geocodeAddressAndCenter,
+    geocodeLatLngAndCenter;
+
+// Initialize Google Map
+function initMap(){
     map = new google.maps.Map(document.getElementById('map'), {
-        center: {lat: -34.397, lng: 150.644},
+        center: {lat: 38.9242, lng: -77.2142983},
         zoom: 11
     });
-    
+    // geocoder object 
+    var geocoder = new google.maps.Geocoder();
 
-    infoWindow = new google.maps.InfoWindow;
-
-    // Try HTML5 geolocation.
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-        var pos = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude
-        };
-
-        // The marker, positioned at your location
-        new google.maps.Marker({
-            position: pos,
-            map: map,
-            icon: {
-                url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
-            },
-            //draggable:true
-        }).addListener('click', function(){
-            //info_window.open(map, this);
-            infoWindow.setPosition(pos);
-            infoWindow.setContent('Current Location');
-            infoWindow.open(map);
-            //map.setCenter(pos);
+    //  Use Geocoding
+    geocodeAddressAndCenter = function() {
+        console.log('geocodeAddress called');
+        geocoder.geocode({'address': _location.value }, function(results, status) {
+            if (status === 'OK') {
+                let infoWindow = new google.maps.InfoWindow({
+                    content: 'Current Location'
+                });
+                map.setCenter(results[0].geometry.location);
+                new google.maps.Marker({
+                    position: results[0].geometry.location,
+                    map: map,
+                    icon: {
+                        url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
+                    }
+                }).addListener('click', function(){
+                    infoWindow.setPosition(this.getPosition());
+                    infoWindow.open(map, this);
+                });
+            } else {
+                alert('Geocode was not successful for the following reason: ' + status);
+            }
         });
-
-        //map.setZoom(16);
-        map.setCenter(pos);
-
-
-        }, function() {
-            handleLocationError(true, infoWindow, map.getCenter());
-        });
-    } else {
-        // Browser doesn't support Geolocation
-        handleLocationError(false, infoWindow, map.getCenter());
     }
 
-    /*var secretMessages = ['This', 'is', 'the', 'secret', 'message'];
-    var lngSpan = bounds.east - bounds.west;
-    var latSpan = bounds.north - bounds.south;
-
-    for (var i = 0; i < secretMessages.length; ++i) {
-        var marker = new google.maps.Marker({
-            position: {
-            lat: bounds.south + latSpan * Math.random(),
-            lng: bounds.west + lngSpan * Math.random()
-            },
-            map: map
+    // Use reverse Geocoding
+    geocodeLatLngAndCenter = function() {
+        console.log('geocodeLatLng called');
+        geocoder.geocode({'location': _position }, function(results, status) {
+            if (status === 'OK') {
+                if (results[0]) {
+                    let infoWindow = new google.maps.InfoWindow({
+                        content: 'Current Location'
+                    });
+                    
+                    map.setCenter(results[0].geometry.location);
+                    new google.maps.Marker({
+                        position: results[0].geometry.location,
+                        map: map,
+                        icon: {
+                            url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
+                        }
+                    }).addListener('click', function(){
+                        infoWindow.setPosition(this.getPosition());
+                        infoWindow.open(map, this);
+                    });
+                    _location.value = results[0].formatted_address;
+                } else {
+                    console.log('No results found');
+                    _location.value = "Location could not be Found."
+                    setTimeout(function() {
+                        _location.value = "";
+                    }, 1000);
+                }
+            } else {
+                console.log('Geocoder failed due to: ' + status);
+                _location.value = "Location could not be Found."
+                setTimeout(function() {
+                    _location.value = "";
+                }, 1000);
+            }
         });
-        attachSecretMessage(marker, secretMessages[i]);
-    }*/
+    }
 }
 
-// Attaches an info window to a marker with the provided message. When the
-// marker is clicked, the info window will open with the secret message.
-/*function attachSecretMessage(marker, secretMessage) {
-    var infowindow = new google.maps.InfoWindow({
-        content: secretMessage
-    });
-
-    marker.addListener('click', function() {
-        infowindow.open(marker.get('map'), marker);
-    }); 
-}*/
-
-
-function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-    infoWindow.setPosition(pos);
-    infoWindow.setContent(browserHasGeolocation ?
-        'Error: The Geolocation service failed.' :
-        'Error: Your browser doesn\'t support geolocation.');
-    infoWindow.open(map);
-}
-
-//async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB_HRi3y7icUTSWgh-pWM69OCql3sno7K4&callback=initMap";
-
+// Call after search button has been pressed
+// calls refreshList() to load restaurants into the listing
+// then direct the user to the listing section
 function search_btn_press() {
     console.log('Search Bar Params: ', _description.value, _location.value);
-    refreshList()
+    refreshList();
     window.location.href = '#listing';
 }
 
+// refreshes restaurant list after user has applied certain filters,
+// changed the location, or wanted to renew the map
 function refreshList(){
     let list = document.getElementById("listing-area");
     list.innerHTML =    "<li LoadingTag><h1 class=\"heading\"><span>Loading</span></h1></li>" + 
                         "<li><h1 class=\"heading\"><span> . . . </span></h1></li>";
     mostRecentSearchOffset = 0;
+    // Remove all current markers from the map, 
+    // but markers still remain in array
+    for (var i = 0; i < markers.length; i++) {
+        markers[i].setMap(null);
+    }
+    // empty the array/ set the array to a new empty one
+    markers = [];
+    // clear markers from map TODO
     loadLocations(list, 10); 
 }
 
@@ -675,7 +692,7 @@ async function yelpRequest(params) {
     console.log("queryString = ", queryString);
     var response;
     try {
-        // turn params into a queuestring and fetch 
+        // turn params into a querystring and fetch 
         response = await fetch(
             queryString,
             header
@@ -685,10 +702,10 @@ async function yelpRequest(params) {
             response = await response.json();
             console.log(response);
         } catch (error) {
-            console.log('JSON ',error);
+            console.log('JSON error = ',error);
         }
     } catch(error) {
-        console.log('FETCH ', error);
+        console.log('FETCH error = ', error);
     }
     // return the promise of the JSON for callback usage 
     return response;
@@ -698,28 +715,15 @@ async function yelpRequest(params) {
 // they choose the "Your Location" option
 function setLocation() {
     if (_location.value == "Your Location") {
+        useGPSLocation = true;
         if (navigator.geolocation){
             _location.value = "Finding Location...";
+            // HTML5 Geolocation call to get GPS coords
             navigator.geolocation.getCurrentPosition(position => {
-
-                _position.latitude = position.coords.latitude;
-                _position.longitude = position.coords.longitude;
-
-                yelpRequest({
-                    latitude:   position.coords.latitude,
-                    longitude:  position.coords.longitude,
-                    limit: 1
-                }).then(response => {
-                    if (response != undefined){
-                        let first = response.businesses[0];
-                        _location.value = first.location.city + ', ' + first.location.state;                        
-                    }else{
-                        _location.value = "Location could not be Found."
-                        setTimeout(function() {
-                            _location.value = "";
-                        }, 1000);
-                    }
-                });
+                _position.lat = position.coords.latitude;
+                _position.lng = position.coords.longitude;
+                // Pull the Location name from the GPS coords
+                geocodeLatLngAndCenter();
             },error => {
                 switch(error.code) {    
                     case error.PERMISSION_DENIED:
@@ -739,9 +743,13 @@ function setLocation() {
                 setTimeout(function() {
                     _location.value = "";
                 }, 1000);
-            });
+            });       
         }else{
             console.log("geolocation not permitted");
         }
+    }else {
+        useGPSLocation = false;
+        // Pull the GPS coords from the Address/Name
+        geocodeAddressAndCenter();
     }
 }
