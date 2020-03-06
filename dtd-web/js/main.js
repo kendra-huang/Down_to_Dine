@@ -447,27 +447,17 @@ function loadLocations(list, amount) {
                 list.innerHTML +=
                 '<li>'+
                     '<div class="blog-img">' +
-                        '<a href="' + businessObj.url + '"target="_blank">' + '<img src="' + businessObj.image_url +'" alt="blog-img">' + '</a>' +
+                        '<a href="' + businessObj.url + '"geocodtarget="_blank">' + '<img src="' + businessObj.image_url +'" alt="blog-img">' + '</a>' +
                     '</div>' +
                     '<div class="content-right">' +
                         '<h3>'+(markers.length+1)+ '<br>' + businessObj.name + '</h3>' +
                         '<img src="' + starPicURL +'">' +
                     '<div>' + businessObj.review_count + ' Reviews</div>' +
                     '<div>' + (businessObj.price != undefined ? businessObj.price : "Price Unavailable") + '</div>' +
-                    // Add/Remove Button Toggle
+                    // Add/Remove Button Toggl
                     '<button onclick="btnUpdate(this)" value="' + businessObj.id + '">Add</button>' +
                 '</li>';
 
-                  
-                // still need to add function where user can click button and have content show
-                // e.g. Business Name, Address, option to take you to google maps
-
-                let info_window = new google.maps.InfoWindow({    
-                    content: '<h3>' + businessObj.name + '</h3>' +
-                                '<img src="' + starPicURL +'">' +
-                                '<div>' + businessObj.review_count + ' Reviews</div>' +
-                                '<div>' + businessObj.price + '</div>'
-                })
                 // creates new marker for each restaurant generated
                 let marker = new google.maps.Marker({
                     position: new google.maps.LatLng(businessObj.coordinates.latitude, businessObj.coordinates.longitude),
@@ -475,6 +465,68 @@ function loadLocations(list, amount) {
                     label: ""+(markers.length+1),
                     title: 'Click to zoom'
                 })
+
+                let businessAddress = "";
+                if (businessObj.location.address1 != undefined) {
+                    businessAddress = "" + businessObj.location.address1;
+                    if (businessObj.location.address2 != undefined) {
+                        businessAddress += " " + businessObj.location.address2;
+                        if (businessObj.location.address3 != undefined) {
+                            businessAddress += " " + businessObj.location.address3;
+                        }
+                    }
+                }
+                if (businessObj.location.city != undefined) {
+                    businessAddress += " " + businessObj.location.city;
+                }
+                if (businessObj.location.state != undefined){
+                    businessAddress += ", " + businessObj.location.state;
+                }
+                if (businessObj.location.zip_code != undefined) {
+                    businessAddress += " " + businessObj.location.zip_code;
+                }
+
+                console.log(businessAddress);
+
+                var placeService = new google.maps.places.PlacesService(map)
+
+                const request = {
+                    query: businessAddress,
+                    fields: ['place_id']/*, 'name', 'formatted_address', 'icon', 'geometry'],*/
+                }
+
+                var businessIDarr = [];
+                placeService.findPlaceFromQuery(request, (results, status) => {
+                    if (status == google.maps.places.PlacesServiceStatus.OK) {
+                        results.forEach((businessObj) => {
+                            console.log(businessObj)
+                        });
+                        /*for (var j = 0; j < results.length; j++) {
+                            if (results[j].place_id != undefined){
+                                businessIDarr[j].push(results[j].place_id);
+                            }
+                        // place_id, name, formatted_address, geometry.location, icon
+                        }*/
+                    }
+                })
+                console.log(businessIDarr);
+
+                let info_window = new google.maps.InfoWindow({    
+                    content: '<h3>' + businessObj.name + '</h3>' +
+                                '<img src="' + starPicURL +'">' +
+                                '<div>' + businessObj.review_count + ' Reviews</div>' +
+                                '<div>' + businessObj.price + '</div>' + '<div><a href="https://www.google.com/maps/search/?api=1&query='
+                                + businessObj.coordinates.latitude + ',' 
+                                + businessObj.coordinates.longitude 
+                                //+ businessObj.location
+                                + '&query_place_id='
+                                + businessIDarr[i] + '">' + 'View on Google Maps</a></div>'
+                })
+
+                console.log(businessObj.place_id);
+                console.log(businessObj.coordinates.latitude);                
+                console.log(businessObj.coordinates.longitude);
+
                 marker.addListener('click', function(){
                     map.setZoom(16);
                     map.setCenter(this.getPosition());
@@ -563,7 +615,7 @@ function initMap(){
                 _position.lng = results[0].geometry.location.lng;
                 console.log(results[0].geometry.location.lat);
                 let infoWindow = new google.maps.InfoWindow({
-                    content: 'Current Location'
+                    content: 'Your Location'
                 });
                 map.setCenter(results[0].geometry.location);
                 new google.maps.Marker({
@@ -589,7 +641,7 @@ function initMap(){
             if (status === 'OK') {
                 if (results[0]) {
                     let infoWindow = new google.maps.InfoWindow({
-                        content: 'Current Location'
+                        content: 'Your Location'
                     });
                     
                     map.setCenter(results[0].geometry.location);
