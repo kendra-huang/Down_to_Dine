@@ -33,22 +33,6 @@ jQuery(document).ready(function($){
     });
     
     $("#refresh").click(refreshList);
-    /*
-    function alreadyAdded(itemTitle) {
-        for (var i = 0; i < objArray.length; i++) {
-            if (objArray[i].title === itemTitle) {
-                return true;
-            }
-        }
-        return false;
-    };
-
-    // Set a click handler for anything with a data-confirmation attribute. 
-    $('[adding-restaurant]').click(function() { 
-        var message = $(this).data('added'); 
-        return confirm(message); 
-    });
-    */
 
 //Initiate WOW JS
     new WOW().init();
@@ -84,11 +68,11 @@ jQuery(document).ready(function($){
 
         // NEW 
         this.tableColumns.css('width', this.productWidth*this.productsNumber + 'px');
+        this.tableColumns.css('height', this.tableHeight + 'px');
     }
 
 
     comparisonMap = {};
-    //const acceptedCatagories = new Set(['American','Japanese', 'Vietnamese', 'Korean', 'Italian', 'Thai', 'Chinese', 'Mexican', 'Indian', 'Scottish', ]);
     function getCatagories(categories){
         let terms = '';
         for(i in categories)
@@ -102,8 +86,8 @@ jQuery(document).ready(function($){
         return terms;
     }
     function getBusinessDistance(business, pos){
-        console.log('current position (lat, long) >> ', pos.latitude, pos.longitude);
-        return (Math.sqrt(Math.pow(business.coordinates.latitude - pos.latitude, 2) + Math.pow(business.coordinates.longitude - pos.longitude, 2)) * 69.09 ).toFixed(2);
+        console.log('current position (lat, long) >> ', pos.lat, pos.lng);
+        return (Math.sqrt(Math.pow(business.coordinates.latitude - pos.lat, 2) + Math.pow(business.coordinates.longitude - pos.lng, 2)) * 69.09 ).toFixed(2);
     }
     productsTable.prototype.tableAdd = function(businessObj) {
         let newElement = $(
@@ -120,6 +104,7 @@ jQuery(document).ready(function($){
                 '<li>'+ getCatagories(businessObj.categories)+'</li>'+ // TODO
                 '<li>'+ getLocationInfo(businessObj.location.display_address) +'</li>'+
                 '<li>'+ getBusinessDistance(businessObj, _position) +' Miles from You</li>'+
+                '<li class="delete" style="cursor: pointer"></li>'+
             '</ul>'+
         '</li>');
         let comp = comparisonTables[0];
@@ -135,6 +120,9 @@ jQuery(document).ready(function($){
                 comp.selectedproductsNumber = comp.selectedproductsNumber + 1;
                 comp.updateFilterBtn();
             }
+        });
+        newElement.on('click', '.delete', function() {
+            comp.tableRemove(businessObj);
         });
         comp.productsTopInfo = comp.table.find('.top-info');
         comp.products = comp.tableColumns.children('.product');
@@ -424,7 +412,6 @@ function loadLocations(list, amount) {
 
     for (let i = 1; i <= 4; i++){
         if (document.getElementById("cb"+i).checked){
-            console.log(params.price);
             if(params.price == undefined){
                 params.price = i;
             }else{
@@ -463,7 +450,7 @@ function loadLocations(list, amount) {
                         '<a href="' + businessObj.url + '"target="_blank">' + '<img src="' + businessObj.image_url +'" alt="blog-img">' + '</a>' +
                     '</div>' +
                     '<div class="content-right">' +
-                        '<h3>'+(i+1)+ '<br>' + businessObj.name + '</h3>' +
+                        '<h3>'+(markers.length+1)+ '<br>' + businessObj.name + '</h3>' +
                         '<img src="' + starPicURL +'">' +
                     '<div>' + businessObj.review_count + ' Reviews</div>' +
                     '<div>' + (businessObj.price != undefined ? businessObj.price : "Price Unavailable") + '</div>' +
@@ -482,16 +469,18 @@ function loadLocations(list, amount) {
                                 '<div>' + businessObj.price + '</div>'
                 })
                 // creates new marker for each restaurant generated
-                markers.push(new google.maps.Marker({
+                let marker = new google.maps.Marker({
                     position: new google.maps.LatLng(businessObj.coordinates.latitude, businessObj.coordinates.longitude),
                     map: map,
-                    label: ""+(i+1),
+                    label: ""+(markers.length+1),
                     title: 'Click to zoom'
-                }).addListener('click', function(){
+                })
+                marker.addListener('click', function(){
                     map.setZoom(16);
                     map.setCenter(this.getPosition());
                     info_window.open(map, this);
-                }));
+                });
+                markers.push(marker);
             }
         }
     });
@@ -569,6 +558,10 @@ function initMap(){
         console.log('geocodeAddress called');
         geocoder.geocode({'address': _location.value }, function(results, status) {
             if (status === 'OK') {
+                // set the location from the geocoding to the _position variable    TODO
+                _position.lat = results[0].geometry.location.lat;
+                _position.lng = results[0].geometry.location.lng;
+                console.log(results[0].geometry.location.lat);
                 let infoWindow = new google.maps.InfoWindow({
                     content: 'Current Location'
                 });
@@ -647,6 +640,7 @@ function refreshList(){
     mostRecentSearchOffset = 0;
     // Remove all current markers from the map, 
     // but markers still remain in array
+    console.log('Removing all Markers');
     for (var i = 0; i < markers.length; i++) {
         markers[i].setMap(null);
     }
@@ -677,7 +671,6 @@ function refreshList(){
         business.rating                         // holds the rating for the business
     });
 */
-
 // Several api variables listed out for usage or to leave blank
 async function yelpRequest(params) { 
     let yelp_corsanywhere = "https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/";

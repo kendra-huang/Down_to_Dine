@@ -171,8 +171,6 @@ Main Components
 .cd-products-columns {
   /* products list wrapper */
   margin-left: 120px;
-  overflow-y: hidden;
-  overflow-x: scroll;
 }
 .cd-products-columns::after {
   clear: both;
@@ -357,7 +355,8 @@ Main Components
   content: '';
   height: 100%;
   width: 100%;
-}
+} 
+
 .cd-products-table .top-info .check::before {
   /* green circle dot */
   border-radius: 50%;
@@ -376,6 +375,14 @@ Main Components
   -moz-transition: opacity 0.3s;
   transition: opacity 0.3s;
 }
+
+.cd-products-table .delete {
+  /* delete icon */
+  background: url(../img/cd-delete.svg) no-repeat center center;
+  background-size: 40px 40px;
+}
+
+
 @media only screen and (min-width: 1170px) {
   .cd-products-table .top-info {
     height: 280px;
