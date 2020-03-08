@@ -33,6 +33,8 @@ jQuery(document).ready(function($){
     });
     
     $("#refresh").click(refreshList);
+    
+    yelpRequest({})
 
 //Initiate WOW JS
     new WOW().init();
@@ -47,7 +49,7 @@ jQuery(document).ready(function($){
     function productsTable( element ) {
         this.element = element;
         this.table = this.element.children('.cd-products-table');
-        this.tableHeight = 650;//this.table.height();
+        this.tableHeight = 828;//this.table.height();
         this.productsWrapper = this.table.children('.cd-products-wrapper');
         this.tableColumns = this.productsWrapper.children('.cd-products-columns');
         this.products = this.tableColumns.children('.product');
@@ -100,9 +102,12 @@ jQuery(document).ready(function($){
             // .top-info ^
             '<ul class="cd-features-list">'+
                 '<li>'+businessObj.price+'</li>'+
-                '<li class="rate"><img src="'+getRatingImgURL(businessObj.rating)+'"></li>'+
-                '<li>'+ getCatagories(businessObj.categories)+'</li>'+ // TODO
-                '<li>'+ getLocationInfo(businessObj.location.display_address) +'</li>'+
+                '<li class="rate">'+
+                    '<img src="'+'img/yelp-1-logo-svg-vector.svg'+'" style="width: 20px; margin-right: 10px">'+
+                    '<img src="'+getRatingImgURL(businessObj.rating)+'">'+
+                '</li>'+
+                '<li style="height: 100px">'+ getCatagories(businessObj.categories)+'</li>'+
+                '<li style="height: 100px">'+ getLocationInfo(businessObj.location.display_address) +'</li>'+
                 '<li>'+ getBusinessDistance(businessObj, _position) +' Miles from You</li>'+
                 '<li class="delete" style="cursor: pointer"></li>'+
             '</ul>'+
@@ -559,9 +564,9 @@ function initMap(){
         geocoder.geocode({'address': _location.value }, function(results, status) {
             if (status === 'OK') {
                 // set the location from the geocoding to the _position variable    TODO
-                _position.lat = results[0].geometry.location.lat;
-                _position.lng = results[0].geometry.location.lng;
-                console.log(results[0].geometry.location.lat);
+                _position.lat = results[0].geometry.location.lat();
+                _position.lng = results[0].geometry.location.lng();
+                console.log(_position);
                 let infoWindow = new google.maps.InfoWindow({
                     content: 'Current Location'
                 });
