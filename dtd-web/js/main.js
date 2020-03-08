@@ -1,5 +1,5 @@
 var tableAdd, tableRemove;
-var map, markers = [];
+var map, markers = [], location_marker;
 var useGPSLocation = false;
 
 jQuery(document).ready(function($){
@@ -90,7 +90,7 @@ jQuery(document).ready(function($){
         return (Math.sqrt(Math.pow(business.coordinates.latitude - pos.lat, 2) + Math.pow(business.coordinates.longitude - pos.lng, 2)) * 69.09 ).toFixed(2) + '<br>';
     }
     function getYelpSite(business, url){
-        return '<a href="'+ url+'">View on Yelp</a>';
+        return '<a href="'+ url+'" target="_blank">View on Yelp</a>';
     }
     productsTable.prototype.tableAdd = function(businessObj) {
         let newElement = $(
@@ -102,10 +102,13 @@ jQuery(document).ready(function($){
             '</div>'+
             // .top-info ^
             '<ul class="cd-features-list">'+
-                '<li>'+businessObj.price+'</li>'+
-                '<li class="rate"><img src="'+getRatingImgURL(businessObj.rating)+'"></li>'+
-                '<li>'+ getCategories(businessObj.categories)+'</li>'+
-                '<li>'+ getLocationInfo(businessObj.location.display_address) +'</li>'+
+                '<li>'+ (businessObj.price != undefined ? businessObj.price : "Price Unavailable" )+'</li>'+
+                '<li class="rate">'+
+                    '<img src="'+'img/yelp-1-logo-svg-vector.svg'+'" style="width: 20px; margin-right: 10px">'+
+                    '<img src="'+getRatingImgURL(businessObj.rating)+'">'+
+                '</li>'+
+                '<li style="height: 100px">'+ getCategories(businessObj.categories)+'</li>'+
+                '<li style="height: 100px">'+ getLocationInfo(businessObj.location.display_address) +'</li>'+
                 '<li>'+ getBusinessDistance(businessObj, _position) +' Miles from You</li>'+
                 '<li>' + getYelpSite(businessObj, businessObj.url) + '</li>' +
                 '<li class="delete" style="cursor: pointer"></li>'+
@@ -451,7 +454,7 @@ function loadLocations(list, amount) {
                 list.innerHTML +=
                 '<li>'+
                     '<div class="blog-img">' +
-                        '<a href="' + businessObj.url + '"geocodtarget="_blank">' + '<img src="' + businessObj.image_url +'" alt="blog-img">' + '</a>' +
+                        '<a href="' + businessObj.url + '"target="_blank">' + '<img src="' + businessObj.image_url +'" alt="blog-img">' + '</a>' +
                     '</div>' +
                     '<div class="content-right">' +
                         '<h3>'+(markers.length+1)+ '<br>' + businessObj.name + '</h3>' +
@@ -566,20 +569,22 @@ function initMap(){
         geocoder.geocode({'address': _location.value }, function(results, status) {
             if (status === 'OK') {
                 // set the location from the geocoding to the _position variable    TODO
-                _position.lat = results[0].geometry.location.lat;
-                _position.lng = results[0].geometry.location.lng;
-                console.log(results[0].geometry.location.lat);
+                _position.lat = results[0].geometry.location.lat();
+                _position.lng = results[0].geometry.location.lng();
                 let infoWindow = new google.maps.InfoWindow({
                     content: 'Your Location'
                 });
                 map.setCenter(results[0].geometry.location);
-                new google.maps.Marker({
+                if (location_marker != undefined)
+                    location_marker.setMap(null);
+                location_marker = new google.maps.Marker({
                     position: results[0].geometry.location,
                     map: map,
                     icon: {
                         url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
                     }
-                }).addListener('click', function(){
+                });
+                location_marker.addListener('click', function(){
                     infoWindow.setPosition(this.getPosition());
                     infoWindow.open(map, this);
                 });
@@ -600,13 +605,16 @@ function initMap(){
                     });
                     
                     map.setCenter(results[0].geometry.location);
-                    new google.maps.Marker({
+                    if (location_marker != undefined)
+                        location_marker.setMap(null);
+                    location_marker = new google.maps.Marker({
                         position: results[0].geometry.location,
                         map: map,
                         icon: {
                             url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
                         }
-                    }).addListener('click', function(){
+                    });
+                    location_marker.addListener('click', function(){
                         infoWindow.setPosition(this.getPosition());
                         infoWindow.open(map, this);
                     });
@@ -651,7 +659,7 @@ function refreshList(){
     for (var i = 0; i < markers.length; i++) {
         markers[i].setMap(null);
     }
-    // empty the array/ set the array to a new empty one
+    // empty the array/set the array to a new empty one
     markers = [];
     // clear markers from map TODO
     loadLocations(list, 10); 
