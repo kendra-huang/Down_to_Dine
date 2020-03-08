@@ -513,7 +513,7 @@ nav .block .navbar-default .navbar-nav > .active > a:hover:before {
 #blog {
   padding-top: 75px;
   padding-bottom: 100px;
-  background: url("../images/blog/blog-bg.jpg");
+  background: url("../images/blog-bg.jpg");
   background-repeat: no-repeat;
   background-size: cover;
   background-attachment: fixed;
@@ -650,7 +650,7 @@ nav .block .navbar-default .navbar-nav > .active > a:hover:before {
 #listing {
   padding-top: 75px;
   padding-bottom: 100px;
-  background: url("../images/blog/blog-bg.jpg");
+  background: url("../images/blog-bg.jpg");
   background-repeat: no-repeat;
   background-size: cover;
   background-attachment: fixed;
