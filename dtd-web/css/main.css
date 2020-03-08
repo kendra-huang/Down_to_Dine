@@ -366,6 +366,11 @@ nav .block .navbar-default {
 }
 nav .block .navbar-default .navbar-brand {
   padding-left: 0px;
+  font-family: myfont;
+  font-size: 30px;
+  font-weight: 600;
+  color: #FF5333;
+  text-transform: uppercase;
 }
 nav .block .navbar-default .navbar-nav {
   padding-top: 10px;
