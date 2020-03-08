@@ -49,7 +49,7 @@ jQuery(document).ready(function($){
     function productsTable( element ) {
         this.element = element;
         this.table = this.element.children('.cd-products-table');
-        this.tableHeight = 828;//this.table.height();
+        this.tableHeight = this.table.children('.features').height();
         this.productsWrapper = this.table.children('.cd-products-wrapper');
         this.tableColumns = this.productsWrapper.children('.cd-products-columns');
         this.products = this.tableColumns.children('.product');
