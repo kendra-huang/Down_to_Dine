@@ -33,8 +33,6 @@ jQuery(document).ready(function($){
     });
     
     $("#refresh").click(refreshList);
-    
-    yelpRequest({})
 
 //Initiate WOW JS
     new WOW().init();
@@ -75,7 +73,7 @@ jQuery(document).ready(function($){
 
 
     comparisonMap = {};
-    function getCatagories(categories){
+    function getCategories(categories){
         let terms = '';
         for(i in categories)
             terms += categories[i].title+'<br>';
@@ -89,7 +87,10 @@ jQuery(document).ready(function($){
     }
     function getBusinessDistance(business, pos){
         console.log('current position (lat, long) >> ', pos.lat, pos.lng);
-        return (Math.sqrt(Math.pow(business.coordinates.latitude - pos.lat, 2) + Math.pow(business.coordinates.longitude - pos.lng, 2)) * 69.09 ).toFixed(2);
+        return (Math.sqrt(Math.pow(business.coordinates.latitude - pos.lat, 2) + Math.pow(business.coordinates.longitude - pos.lng, 2)) * 69.09 ).toFixed(2) + '<br>';
+    }
+    function getYelpSite(business, url){
+        return '<a href="'+ url+'">View on Yelp</a>';
     }
     productsTable.prototype.tableAdd = function(businessObj) {
         let newElement = $(
@@ -102,13 +103,11 @@ jQuery(document).ready(function($){
             // .top-info ^
             '<ul class="cd-features-list">'+
                 '<li>'+businessObj.price+'</li>'+
-                '<li class="rate">'+
-                    '<img src="'+'img/yelp-1-logo-svg-vector.svg'+'" style="width: 20px; margin-right: 10px">'+
-                    '<img src="'+getRatingImgURL(businessObj.rating)+'">'+
-                '</li>'+
-                '<li style="height: 100px">'+ getCatagories(businessObj.categories)+'</li>'+
-                '<li style="height: 100px">'+ getLocationInfo(businessObj.location.display_address) +'</li>'+
+                '<li class="rate"><img src="'+getRatingImgURL(businessObj.rating)+'"></li>'+
+                '<li>'+ getCategories(businessObj.categories)+'</li>'+
+                '<li>'+ getLocationInfo(businessObj.location.display_address) +'</li>'+
                 '<li>'+ getBusinessDistance(businessObj, _position) +' Miles from You</li>'+
+                '<li>' + getYelpSite(businessObj, businessObj.url) + '</li>' +
                 '<li class="delete" style="cursor: pointer"></li>'+
             '</ul>'+
         '</li>');
@@ -471,61 +470,12 @@ function loadLocations(list, amount) {
                     title: 'Click to zoom'
                 })
 
-                let businessAddress = "";
-                if (businessObj.location.address1 != undefined) {
-                    businessAddress = "" + businessObj.location.address1;
-                    if (businessObj.location.address2 != undefined) {
-                        businessAddress += " " + businessObj.location.address2;
-                        if (businessObj.location.address3 != undefined) {
-                            businessAddress += " " + businessObj.location.address3;
-                        }
-                    }
-                }
-                if (businessObj.location.city != undefined) {
-                    businessAddress += " " + businessObj.location.city;
-                }
-                if (businessObj.location.state != undefined){
-                    businessAddress += ", " + businessObj.location.state;
-                }
-                if (businessObj.location.zip_code != undefined) {
-                    businessAddress += " " + businessObj.location.zip_code;
-                }
-
-                console.log(businessAddress);
-
-                var placeService = new google.maps.places.PlacesService(map)
-
-                const request = {
-                    query: businessAddress,
-                    fields: ['place_id']/*, 'name', 'formatted_address', 'icon', 'geometry'],*/
-                }
-
-                var businessIDarr = [];
-                placeService.findPlaceFromQuery(request, (results, status) => {
-                    if (status == google.maps.places.PlacesServiceStatus.OK) {
-                        results.forEach((businessObj) => {
-                            console.log(businessObj)
-                        });
-                        /*for (var j = 0; j < results.length; j++) {
-                            if (results[j].place_id != undefined){
-                                businessIDarr[j].push(results[j].place_id);
-                            }
-                        // place_id, name, formatted_address, geometry.location, icon
-                        }*/
-                    }
-                })
-                console.log(businessIDarr);
-
                 let info_window = new google.maps.InfoWindow({    
                     content: '<h3>' + businessObj.name + '</h3>' +
                                 '<img src="' + starPicURL +'">' +
                                 '<div>' + businessObj.review_count + ' Reviews</div>' +
-                                '<div>' + businessObj.price + '</div>' + '<div><a href="https://www.google.com/maps/search/?api=1&query='
-                                + businessObj.coordinates.latitude + ',' 
-                                + businessObj.coordinates.longitude 
-                                //+ businessObj.location
-                                + '&query_place_id='
-                                + businessIDarr[i] + '">' + 'View on Google Maps</a></div>'
+                                '<div>' + businessObj.price + '</div>' + 
+                                '<div><button onclick="btnUpdate(this)" value="' + businessObj.id + '">Add</button>'+'</div>'
                 })
 
                 console.log(businessObj.place_id);
@@ -616,9 +566,9 @@ function initMap(){
         geocoder.geocode({'address': _location.value }, function(results, status) {
             if (status === 'OK') {
                 // set the location from the geocoding to the _position variable    TODO
-                _position.lat = results[0].geometry.location.lat();
-                _position.lng = results[0].geometry.location.lng();
-                console.log(_position);
+                _position.lat = results[0].geometry.location.lat;
+                _position.lng = results[0].geometry.location.lng;
+                console.log(results[0].geometry.location.lat);
                 let infoWindow = new google.maps.InfoWindow({
                     content: 'Your Location'
                 });
