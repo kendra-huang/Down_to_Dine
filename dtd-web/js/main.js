@@ -462,7 +462,7 @@ function loadLocations(list, amount) {
                     '<div>' + businessObj.review_count + ' Reviews</div>' +
                     '<div>' + (businessObj.price != undefined ? businessObj.price : "Price Unavailable") + '</div>' +
                     // Add/Remove Button Toggl
-                    '<button onclick="btnUpdate(this)" value="' + businessObj.id + '">Add</button>' +
+                    '<button onclick="btnUpdate(this)" value="' + businessObj.id + '">' + ( comparisonMap[businessObj.id] != undefined ? "Remove" : "Add" ) + '</button>' +
                 '</li>';
 
                 // creates new marker for each restaurant generated
@@ -478,7 +478,7 @@ function loadLocations(list, amount) {
                                 '<img src="' + starPicURL +'">' +
                                 '<div>' + businessObj.review_count + ' Reviews</div>' +
                                 '<div>' + businessObj.price + '</div>' + 
-                                '<div><button onclick="btnUpdate(this)" value="' + businessObj.id + '">Add</button>'+'</div>'
+                                '<div><button onclick="btnUpdate(this)" value="' + businessObj.id + '">'+ ( comparisonMap[businessObj.id] != undefined ? "Remove" : "Add" ) +'</button>'+'</div>'
                 })
 
                 console.log(businessObj.place_id);
@@ -502,18 +502,22 @@ function loadLocations(list, amount) {
 function btnUpdate(buttonObject){
     let btn = $(buttonObject);
     console.log(btn);
+    // Curreent business from the business Map
     var businessObj = businessMap[buttonObject.value];
     if (btn.text() == 'Add'){
+        // Adding the id of the business to the comparison map
         comparisonMap[buttonObject.value] = businessObj;
         tableAdd(businessObj);
         console.log('add to business array', businessObj);
     }
     else {
+        // removing the id of hte business of the business
         comparisonMap[buttonObject.value] = undefined;
         tableRemove(businessObj);
         console.log('removed business from array', businessObj);
         //document.getElementById(0)
     }
+
     btn.text(btn.text() == 'Add' ? 'Remove' : 'Add');
 }
 
